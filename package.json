@@ -1,0 +1,11 @@
+{
+  "name": "dtcg",
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^18.8.3",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
+  }
+}
