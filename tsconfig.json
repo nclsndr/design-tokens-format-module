@@ -1,6 +1,17 @@
 {
   "compilerOptions": {
     "strictNullChecks": true,
-    "noImplicitAny": true
-  }
+    "noImplicitAny": true,
+    "module": "node16",
+    "moduleResolution": "node16",
+    "esModuleInterop": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "declaration": true
+  },
+  "exclude": [
+    "./dist",
+    "vite.config.ts",
+    "./**/*.spec.ts"
+  ]
 }
