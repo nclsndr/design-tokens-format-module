@@ -66,7 +66,9 @@ type FontWeightValue =
   | FontWeightNomenclature[keyof FontWeightNomenclature]['value'] // 'thin' | 'hairline' | 'extra-light' | 'ultra-light' | 'light' | 'normal' | 'regular' | 'book' | 'medium' | 'semi-bold' | 'demi-bold' | 'bold' | 'extra-bold' | 'ultra-bold' | 'black' | 'heavy' | 'extra-black' | 'ultra-black'
   | Alias;
 type DurationValue = `${number}ms` | Alias; // 100ms
-type CubicBezierValue = [number, number, number, number] | Alias; // [P1x, P1y, P2x, P2y]
+type CubicBezierValue =
+  | [P1x: number, P1y: number, P2x: number, P2y: number]
+  | Alias; // [P1x, P1y, P2x, P2y]
 
 // Composite token value types
 type ShadowValue =

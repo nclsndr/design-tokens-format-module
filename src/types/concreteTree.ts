@@ -32,7 +32,7 @@ type ConcreteFontWeightValue =
   | FontWeightNomenclature[keyof FontWeightNomenclature]['value'];
 type ConcreteDurationValue = ConcreteJSONStringValue<`${number}ms`>;
 type ConcreteCubicBezierValue =
-  | [number, number, number, number]
+  | [P1x: number, P1y: number, P2x: number, P2y: number]
   | ConcreteAliasUnit;
 
 type ConcreteStrokeValue =

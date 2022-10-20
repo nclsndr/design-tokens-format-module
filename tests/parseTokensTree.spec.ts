@@ -175,111 +175,6 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a color', () => {
-    const input: TokenTree = {
-      'a-color': {
-        $type: 'color',
-        $value: '#000000',
-        $description: 'This is a color',
-      },
-    };
-    const result = parseTokensTree(input);
-    const output = {
-      'a-color': {
-        $type: 'color',
-        $value: '#000000',
-        $description: 'This is a color',
-        _kind: 'token',
-        _path: ['a-color'],
-      },
-    };
-    expect(result).toEqual(output);
-  });
-  it('Should parseTokensTree of a border', () => {
-    const input: TokenTree = {
-      'border-basis': {
-        $type: 'border',
-        $value: {
-          color: '#36363600',
-          width: '3px',
-          style: 'solid',
-        },
-        $description: 'This is a border',
-      },
-    };
-    const result = parseTokensTree(input);
-    const output = {
-      'border-basis': {
-        $type: 'border',
-        $value: {
-          color: '#36363600',
-          width: '3px',
-          style: 'solid',
-        },
-        $description: 'This is a border',
-        _kind: 'token',
-        _path: ['border-basis'],
-      },
-    };
-    expect(result).toEqual(output);
-  });
-  it('Should parseTokensTree of a group of colors', () => {
-    const input = {
-      colors: {
-        $type: 'color',
-        primary: {
-          $value: '#000000',
-          $description: 'This is a primary color',
-        },
-        secondary: {
-          $value: '#ffffff',
-        },
-      },
-    } as const;
-    const result = parseTokensTree(input);
-    const output = {
-      colors: {
-        $type: 'color',
-        _kind: 'group',
-        _path: ['colors'],
-        primary: {
-          $type: 'color',
-          $value: '#000000',
-          $description: 'This is a primary color',
-          _kind: 'token',
-          _path: ['colors', 'primary'],
-        },
-        secondary: {
-          $type: 'color',
-          $value: '#ffffff',
-          _kind: 'token',
-          _path: ['colors', 'secondary'],
-        },
-      },
-    };
-    expect(result).toEqual(output);
-  });
-  it('Should keep $description and $extensions of a group', () => {
-    const input = {
-      colors: {
-        $type: 'color',
-        $description: 'This is a group of colors',
-        $extensions: { 'tool-based-extension': 'some-value' },
-      },
-    } as const;
-
-    const result = parseTokensTree(input);
-    const output = {
-      colors: {
-        $type: 'color',
-        $description: 'This is a group of colors',
-        $extensions: { 'tool-based-extension': 'some-value' },
-        _kind: 'group',
-        _path: ['colors'],
-      },
-    };
-    expect(result).toEqual(output);
-  });
   it('Should infer a JSON String $type if not given otherwise', async () => {
     const input = {
       'string-token': {
@@ -378,6 +273,423 @@ describe.concurrent('parseTokensTree', () => {
         $value: [],
         _kind: 'token',
         _path: ['array-literal-token'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+
+  it('Should parseTokensTree of a color', () => {
+    const input: TokenTree = {
+      'a-color': {
+        $type: 'color',
+        $value: '#000000',
+        $description: 'This is a color',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'a-color': {
+        $type: 'color',
+        $value: '#000000',
+        $description: 'This is a color',
+        _kind: 'token',
+        _path: ['a-color'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a dimension', () => {
+    const input: TokenTree = {
+      'dimension-basis': {
+        $type: 'dimension',
+        $value: '3px',
+        $description: 'This is a dimension',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'dimension-basis': {
+        $type: 'dimension',
+        $value: '3px',
+        $description: 'This is a dimension',
+        _kind: 'token',
+        _path: ['dimension-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a string based fontFamily', () => {
+    const input: TokenTree = {
+      'fontFamily-basis': {
+        $type: 'fontFamily',
+        $value: 'Arial',
+        $description: 'This is a fontFamily',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'fontFamily-basis': {
+        $type: 'fontFamily',
+        $value: 'Arial',
+        $description: 'This is a fontFamily',
+        _kind: 'token',
+        _path: ['fontFamily-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a string[] based fontFamily', () => {
+    const input: TokenTree = {
+      'fontFamily-basis': {
+        $type: 'fontFamily',
+        $value: ['Arial', 'sans-serif'],
+        $description: 'This is a fontFamily',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'fontFamily-basis': {
+        $type: 'fontFamily',
+        $value: ['Arial', 'sans-serif'],
+        $description: 'This is a fontFamily',
+        _kind: 'token',
+        _path: ['fontFamily-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a string based fontWeight', () => {
+    const input: TokenTree = {
+      'fontWeight-basis': {
+        $type: 'fontWeight',
+        $value: 'light',
+        $description: 'This is a fontWeight',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'fontWeight-basis': {
+        $type: 'fontWeight',
+        $value: 'light',
+        $description: 'This is a fontWeight',
+        _kind: 'token',
+        _path: ['fontWeight-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a number based fontWeight', () => {
+    const input: TokenTree = {
+      'fontWeight-basis': {
+        $type: 'fontWeight',
+        $value: 200,
+        $description: 'This is a fontWeight',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'fontWeight-basis': {
+        $type: 'fontWeight',
+        $value: 200,
+        $description: 'This is a fontWeight',
+        _kind: 'token',
+        _path: ['fontWeight-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a duration', () => {
+    const input: TokenTree = {
+      'duration-basis': {
+        $type: 'duration',
+        $value: '200ms',
+        $description: 'This is a duration',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'duration-basis': {
+        $type: 'duration',
+        $value: '200ms',
+        $description: 'This is a duration',
+        _kind: 'token',
+        _path: ['duration-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a cubicBezier', () => {
+    const input: TokenTree = {
+      'cubicBezier-basis': {
+        $type: 'cubicBezier',
+        $value: [0.3, 2, 0.5, 3],
+        $description: 'This is a cubicBezier',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'cubicBezier-basis': {
+        $type: 'cubicBezier',
+        $value: [0.3, 2, 0.5, 3],
+        $description: 'This is a cubicBezier',
+        _kind: 'token',
+        _path: ['cubicBezier-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a shadow', () => {
+    const input: TokenTree = {
+      'shadow-basis': {
+        $type: 'shadow',
+        $value: {
+          color: '#000000',
+          offsetX: '1px',
+          offsetY: '1px',
+          blur: '3px',
+          spread: '4px',
+        },
+        $description: 'This is a shadow',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'shadow-basis': {
+        $type: 'shadow',
+        $value: {
+          color: '#000000',
+          offsetX: '1px',
+          offsetY: '1px',
+          blur: '3px',
+          spread: '4px',
+        },
+        $description: 'This is a shadow',
+        _kind: 'token',
+        _path: ['shadow-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a string based strokeStyle', () => {
+    const input: TokenTree = {
+      'strokeStyle-basis': {
+        $type: 'strokeStyle',
+        $value: 'solid',
+        $description: 'This is a strokeStyle',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'strokeStyle-basis': {
+        $type: 'strokeStyle',
+        $value: 'solid',
+        $description: 'This is a strokeStyle',
+        _kind: 'token',
+        _path: ['strokeStyle-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of an object based strokeStyle', () => {
+    const input: TokenTree = {
+      'strokeStyle-basis': {
+        $type: 'strokeStyle',
+        $value: {
+          dashArray: ['1px'],
+          lineCap: 'round',
+        },
+        $description: 'This is a strokeStyle',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'strokeStyle-basis': {
+        $type: 'strokeStyle',
+        $value: {
+          dashArray: ['1px'],
+          lineCap: 'round',
+        },
+        $description: 'This is a strokeStyle',
+        _kind: 'token',
+        _path: ['strokeStyle-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a border', () => {
+    const input: TokenTree = {
+      'border-basis': {
+        $type: 'border',
+        $value: {
+          color: '#36363600',
+          width: '3px',
+          style: 'solid',
+        },
+        $description: 'This is a border',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'border-basis': {
+        $type: 'border',
+        $value: {
+          color: '#36363600',
+          width: '3px',
+          style: 'solid',
+        },
+        $description: 'This is a border',
+        _kind: 'token',
+        _path: ['border-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a transition', () => {
+    const input: TokenTree = {
+      'transition-basis': {
+        $type: 'transition',
+        $value: {
+          duration: '100ms',
+          delay: '0ms',
+          timingFunction: [0.3, 2, 0.5, 3],
+        },
+        $description: 'This is a transition',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'transition-basis': {
+        $type: 'transition',
+        $value: {
+          duration: '100ms',
+          delay: '0ms',
+          timingFunction: [0.3, 2, 0.5, 3],
+        },
+        $description: 'This is a transition',
+        _kind: 'token',
+        _path: ['transition-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a gradient', () => {
+    const input: TokenTree = {
+      'gradient-basis': {
+        $type: 'gradient',
+        $value: [
+          {
+            color: '#000000',
+            position: 0,
+          },
+          { color: '#DD5511', position: 0.8 },
+        ],
+        $description: 'This is a gradient',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'gradient-basis': {
+        $type: 'gradient',
+        $value: [
+          {
+            color: '#000000',
+            position: 0,
+          },
+          { color: '#DD5511', position: 0.8 },
+        ],
+        $description: 'This is a gradient',
+        _kind: 'token',
+        _path: ['gradient-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should parseTokensTree of a typography', () => {
+    const input: TokenTree = {
+      'typography-basis': {
+        $type: 'typography',
+        $value: {
+          fontFamily: 'Arial',
+          fontSize: '12px',
+          fontWeight: 'light',
+          letterSpacing: '0',
+          lineHeight: '0',
+        },
+        $description: 'This is a typography',
+      },
+    };
+    const result = parseTokensTree(input);
+    const output = {
+      'typography-basis': {
+        $type: 'typography',
+        $value: {
+          fontFamily: 'Arial',
+          fontSize: '12px',
+          fontWeight: 'light',
+          letterSpacing: '0',
+          lineHeight: '0',
+        },
+        $description: 'This is a typography',
+        _kind: 'token',
+        _path: ['typography-basis'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+
+  it('Should parseTokensTree of a group of colors', () => {
+    const input = {
+      colors: {
+        $type: 'color',
+        primary: {
+          $value: '#000000',
+          $description: 'This is a primary color',
+        },
+        secondary: {
+          $value: '#ffffff',
+        },
+      },
+    } as const;
+    const result = parseTokensTree(input);
+    const output = {
+      colors: {
+        $type: 'color',
+        _kind: 'group',
+        _path: ['colors'],
+        primary: {
+          $type: 'color',
+          $value: '#000000',
+          $description: 'This is a primary color',
+          _kind: 'token',
+          _path: ['colors', 'primary'],
+        },
+        secondary: {
+          $type: 'color',
+          $value: '#ffffff',
+          _kind: 'token',
+          _path: ['colors', 'secondary'],
+        },
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should keep $description and $extensions of a group', () => {
+    const input = {
+      colors: {
+        $type: 'color',
+        $description: 'This is a group of colors',
+        $extensions: { 'tool-based-extension': 'some-value' },
+      },
+    } as const;
+
+    const result = parseTokensTree(input);
+    const output = {
+      colors: {
+        $type: 'color',
+        $description: 'This is a group of colors',
+        $extensions: { 'tool-based-extension': 'some-value' },
+        _kind: 'group',
+        _path: ['colors'],
       },
     };
     expect(result).toEqual(output);
