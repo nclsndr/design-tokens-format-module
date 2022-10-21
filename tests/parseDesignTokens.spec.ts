@@ -1124,6 +1124,24 @@ describe.concurrent('parseDesignTokens', () => {
       )}" not found in context: ${JSON.stringify(input)}`
     );
   });
+  it('Should fail resolving circular referencing aliases', async () => {
+    const input = {
+      colors: {
+        $type: 'color',
+        primary: {
+          $value: '{colors.secondary}',
+        },
+        secondary: {
+          $value: '{colors.primary}',
+        },
+      },
+    } as const;
+
+    expect(() => parseDesignTokens(input)).toThrow(
+      'Maximum call stack size exceeded'
+    );
+  });
+
   it('Should fail resolving a token with an invalid $type', () => {
     const input = {
       'invalid-token': {
