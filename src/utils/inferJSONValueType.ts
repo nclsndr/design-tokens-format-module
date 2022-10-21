@@ -1,4 +1,4 @@
-import { JSONTokenType } from '../types/dtcg.js';
+import { JSONTokenType } from '../types/designTokenFormatModule.js';
 
 export function inferJSONValueType(value: unknown): JSONTokenType {
   if (value === null) {

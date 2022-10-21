@@ -1,38 +1,35 @@
 import allLodash from 'lodash';
 
 import {
-  JSONObjectValue,
+  TokenGroup,
   TokenTree,
   TokenType,
+  TokenUnit,
   TokenValue,
-} from './types/dtcg.js';
+} from './types/designTokenFormatModule.js';
 import { ConcreteTokenTree } from './types/concreteTree.js';
 import { matchIsAlias } from './utils/matchIsAlias.js';
 import { validateTokenValue } from './utils/validateTokenValue.js';
 import { validateTokenAndGroupName } from './utils/validateTokenAndGroupName.js';
 import { inferJSONValueType } from './utils/inferJSONValueType.js';
 
-const { get } = allLodash;
+const { get, omitBy } = allLodash;
 
-function resolveAlias(
-  rawAlias: string,
-  parent?: TokenTree,
-  context?: TokenTree
-) {
+export function resolveAlias(rawAlias: string, context?: TokenTree) {
   // rawAlias is like {colors.primary}
   const alias = rawAlias.slice(1, -1);
   const currentPath = alias.split('.');
   const foundEntry = get(context, alias) as TokenTree;
   if (foundEntry) {
-    const currentKey = alias.split('.').pop();
+    const tokenName = alias.split('.').pop();
     const parentPath = alias.split('.').slice(0, -1).join('.');
     const maybeParent =
       parentPath.length > 0
         ? (get(context, parentPath) as TokenTree)
         : undefined;
 
-    const result = parseTokensTree(
-      currentKey ? { [currentKey]: foundEntry } : {},
+    const result = parseDesignTokens(
+      tokenName ? { [tokenName]: foundEntry } : {},
       maybeParent,
       context,
       currentPath
@@ -42,7 +39,7 @@ function resolveAlias(
     return {
       ...formatted,
       _kind: 'alias' as const,
-      _name: currentKey ?? null,
+      _name: tokenName ?? null,
       _path: currentPath,
     };
   } else {
@@ -63,7 +60,7 @@ function resolveObjectValue(
     if (matchIsAlias(value)) {
       return {
         ...acc,
-        [key]: resolveAlias(value as string, parent, context),
+        [key]: resolveAlias(value as string, context),
       };
     } else if (Array.isArray(value)) {
       return {
@@ -93,7 +90,7 @@ function resolveArrayValue(
   return value.map((item, i) => {
     const currentPath = path.concat(`[${i}]`);
     if (matchIsAlias(item)) {
-      return resolveAlias(item as string, parent, context);
+      return resolveAlias(item as string, context);
     } else if (Array.isArray(item)) {
       return resolveArrayValue(item, parent, context, currentPath);
     } else if (item !== null && typeof item === 'object') {
@@ -104,7 +101,7 @@ function resolveArrayValue(
   });
 }
 
-export function parseTokensTree(
+export function parseDesignTokens(
   tokens: TokenTree,
   parent?: TokenTree,
   context?: TokenTree,
@@ -115,30 +112,26 @@ export function parseTokensTree(
   }
 
   return Object.entries(tokens).reduce((acc, [name, value]) => {
-    const { $type, $description, $value, $extensions, ...rest } = value as {
-      $type?: TokenType;
-      $description?: string;
-      $value?: TokenValue;
-      $extensions?: JSONObjectValue;
-    };
+    // const { $type, $description, $value, $extensions, ...rest } = value
     validateTokenAndGroupName(name);
     const currentPath = path.concat(name);
 
     let maybeType: TokenType | undefined;
-    if ($type) {
-      maybeType = $type;
+    if (value.$type) {
+      maybeType = value.$type as TokenType;
     } else if (parent && parent.$type) {
       // From direct parent if exists
       maybeType = parent.$type as TokenType;
     }
 
     // A Token has a $value
-    if ($value !== undefined) {
+    if ('$value' in value && value.$value !== undefined) {
+      const { $description, $value, $extensions } = value as TokenUnit;
       const isAlias = matchIsAlias($value);
 
       let finalValue: TokenValue = $value;
       if (isAlias) {
-        finalValue = resolveAlias($value as string, parent, context);
+        finalValue = resolveAlias($value as string, context);
       } else if (Array.isArray($value)) {
         finalValue = resolveArrayValue($value, parent, context, currentPath);
       } else if ($value !== null && typeof $value === 'object') {
@@ -174,30 +167,37 @@ export function parseTokensTree(
           $type: maybeType,
           $value: finalValue,
           ...($description ? { $description } : {}),
+          ...($extensions ? { $extensions } : {}),
           _kind: 'token' as const,
           _path: currentPath,
         },
       };
     } else {
       // A Group has NOT a $value
-      const merged = Object.entries(rest).reduce(
-        (acc, [k, v]) => ({
-          ...acc,
-          ...parseTokensTree(
-            { [k]: v } as TokenTree,
-            value as TokenTree,
-            context,
-            currentPath
-          ),
-        }),
-        {}
-      ) as TokenTree;
+      const { $description } = value as TokenGroup;
+      const restOfKeys = omitBy(value, (v, k) => k.startsWith('$'));
+
+      const merged = Object.entries(restOfKeys)
+        .filter(
+          ([_, v]) => v !== null && typeof v === 'object' && !Array.isArray(v)
+        )
+        .reduce(
+          (acc, [k, v]) => ({
+            ...acc,
+            ...parseDesignTokens(
+              { [k]: v } as TokenTree,
+              value as TokenTree,
+              context,
+              currentPath
+            ),
+          }),
+          {}
+        ) as TokenTree;
       return {
         ...acc,
         [name]: {
           ...(maybeType ? { $type: maybeType } : {}),
           ...($description ? { $description } : {}),
-          ...($extensions ? { $extensions } : {}),
           _kind: 'group' as const,
           _path: currentPath,
           ...merged,

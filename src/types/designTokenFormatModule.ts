@@ -149,13 +149,13 @@ export type TokenUnit = {
   $value: TokenValue;
   $type?: TokenType;
   $description?: string;
+  $extensions?: JSONValue;
 };
 
-type TokenGroup = {
+export type TokenGroup = {
   // Group
   $type?: TokenType;
   $description?: string;
-  $extensions?: JSONValue;
   // $value: never
 };
 

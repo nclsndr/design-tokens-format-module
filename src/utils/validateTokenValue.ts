@@ -1,4 +1,4 @@
-import { TokenType, TokenValue } from '../types/dtcg.js';
+import { TokenType, TokenValue } from '../types/designTokenFormatModule.js';
 import { matchIsAlias } from './matchIsAlias.js';
 import {
   aliasSchema,

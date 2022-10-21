@@ -1,4 +1,8 @@
-import { FontWeightNomenclature, JSONObjectValue, TokenType } from './dtcg.js';
+import {
+  FontWeightNomenclature,
+  JSONObjectValue,
+  TokenType,
+} from './designTokenFormatModule.js';
 
 export type ConcreteAliasUnit = {
   $description?: string;
@@ -160,6 +164,7 @@ type ConcreteTokenTypeValueGuard =
 export type ConcreteTokenUnit = {
   // Token
   $description?: string;
+  $extensions?: JSONObjectValue;
   _kind: 'token';
   _path: Array<string>;
 } & ConcreteTokenTypeValueGuard;
@@ -167,7 +172,6 @@ type ConcreteTokenGroup = {
   // Group
   $type?: TokenType;
   $description?: string;
-  $extensions?: JSONObjectValue;
   // $value: never
   _kind: 'group';
   _path: Array<string>;

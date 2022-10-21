@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 
-import { TokenTree } from '../src/types/dtcg.js';
-import { parseTokensTree } from '../src/parseTokensTree.js';
+import { TokenTree } from '../src/types/designTokenFormatModule.js';
+import { parseDesignTokens, resolveAlias } from '../src/parseDesignTokens.js';
 
-describe.concurrent('parseTokensTree', () => {
+describe.concurrent('parseDesignTokens', () => {
   it('Should take empty object', () => {
-    const result = parseTokensTree({});
+    const result = parseDesignTokens({});
     expect(result).toEqual({});
   });
   it('Should return a nested empty object', () => {
@@ -14,7 +14,7 @@ describe.concurrent('parseTokensTree', () => {
         extraKey: {},
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       aKey: {
         _kind: 'group',
@@ -27,12 +27,60 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should fail parsing when group name contains "."', async () => {
+  it('Should ignore any non-object key on a group', () => {
+    const input: any = {
+      colors: {
+        $type: 'color',
+        someObject: {
+          isValidGroup: false,
+        },
+        someString: 'someString',
+        someNumber: 42,
+        someBoolean: true,
+        someNull: null,
+        someArray: [1, 2, 3],
+      },
+    };
+    const result = parseDesignTokens(input);
+    const output = {
+      colors: {
+        $type: 'color',
+        _kind: 'group',
+        _path: ['colors'],
+        someObject: {
+          $type: 'color',
+          _kind: 'group',
+          _path: ['colors', 'someObject'],
+        },
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should ignore extra keys on a token', () => {
+    const input: any = {
+      'a-color': {
+        $type: 'color',
+        $value: '#000000',
+        'some-extra-key': 'some-extra-value',
+      },
+    };
+    const result = parseDesignTokens(input);
+    const output = {
+      'a-color': {
+        $type: 'color',
+        $value: '#000000',
+        _kind: 'token',
+        _path: ['a-color'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+  it('Should fail parsing when group name contains "."', () => {
     const input = {
       'a.key': {},
     };
     expect(() => {
-      parseTokensTree(input);
+      parseDesignTokens(input);
     }).toThrowError(`[
   {
     "code": "custom",
@@ -41,7 +89,7 @@ describe.concurrent('parseTokensTree', () => {
   }
 ]`);
   });
-  it('Should fail parsing when token name contains "."', async () => {
+  it('Should fail parsing when token name contains "."', () => {
     const input = {
       colors: {
         $type: 'color',
@@ -51,7 +99,7 @@ describe.concurrent('parseTokensTree', () => {
       },
     } as const;
     expect(() => {
-      parseTokensTree(input);
+      parseDesignTokens(input);
     }).toThrowError(`[
   {
     "code": "custom",
@@ -60,6 +108,7 @@ describe.concurrent('parseTokensTree', () => {
   }
 ]`);
   });
+
   it('Should deduce JSON type of null', () => {
     const input: TokenTree = {
       'null-token': {
@@ -67,7 +116,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a null value',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'null-token': {
         $type: 'Null',
@@ -86,7 +135,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a string value',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'string-token': {
         $type: 'String',
@@ -105,7 +154,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a boolean value',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'boolean-token': {
         $type: 'Boolean',
@@ -124,7 +173,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a custom object value',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'object-literal-token': {
         $type: 'Object',
@@ -147,7 +196,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a custom array of objects value',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'some-token': {
         $type: 'color',
@@ -175,13 +224,13 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should infer a JSON String $type if not given otherwise', async () => {
+  it('Should infer a JSON String $type if not given otherwise', () => {
     const input = {
       'string-token': {
         $value: 'a value',
       },
     } as const;
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'string-token': {
         $type: 'String',
@@ -192,13 +241,13 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should infer a JSON Number $type if not given otherwise', async () => {
+  it('Should infer a JSON Number $type if not given otherwise', () => {
     const input = {
       'number-token': {
         $value: 1,
       },
     } as const;
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'number-token': {
         $type: 'Number',
@@ -209,13 +258,13 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should infer a JSON Boolean $type if not given otherwise', async () => {
+  it('Should infer a JSON Boolean $type if not given otherwise', () => {
     const input = {
       'boolean-token': {
         $value: true,
       },
     } as const;
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'boolean-token': {
         $type: 'Boolean',
@@ -226,13 +275,13 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should infer a JSON Null $type if not given otherwise', async () => {
+  it('Should infer a JSON Null $type if not given otherwise', () => {
     const input = {
       'null-token': {
         $value: null,
       },
     } as const;
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'null-token': {
         $type: 'Null',
@@ -243,13 +292,13 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should infer a JSON Object $type if not given otherwise', async () => {
+  it('Should infer a JSON Object $type if not given otherwise', () => {
     const input = {
       'object-literal-token': {
         $value: {},
       },
     } as const;
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'object-literal-token': {
         $type: 'Object',
@@ -260,13 +309,13 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should infer a JSON Array $type if not given otherwise', async () => {
+  it('Should infer a JSON Array $type if not given otherwise', () => {
     const input = {
       'array-literal-token': {
         $value: [],
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'array-literal-token': {
         $type: 'Array',
@@ -278,7 +327,7 @@ describe.concurrent('parseTokensTree', () => {
     expect(result).toEqual(output);
   });
 
-  it('Should parseTokensTree of a color', () => {
+  it('Should parse a color token', () => {
     const input: TokenTree = {
       'a-color': {
         $type: 'color',
@@ -286,7 +335,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a color',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'a-color': {
         $type: 'color',
@@ -298,7 +347,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a dimension', () => {
+  it('Should parse a dimension token', () => {
     const input: TokenTree = {
       'dimension-basis': {
         $type: 'dimension',
@@ -306,7 +355,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a dimension',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'dimension-basis': {
         $type: 'dimension',
@@ -318,7 +367,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a string based fontFamily', () => {
+  it('Should parse a string based fontFamily token', () => {
     const input: TokenTree = {
       'fontFamily-basis': {
         $type: 'fontFamily',
@@ -326,7 +375,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a fontFamily',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'fontFamily-basis': {
         $type: 'fontFamily',
@@ -338,7 +387,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a string[] based fontFamily', () => {
+  it('Should parse a string[] based fontFamily token', () => {
     const input: TokenTree = {
       'fontFamily-basis': {
         $type: 'fontFamily',
@@ -346,7 +395,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a fontFamily',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'fontFamily-basis': {
         $type: 'fontFamily',
@@ -358,7 +407,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a string based fontWeight', () => {
+  it('Should parse a string based fontWeight token', () => {
     const input: TokenTree = {
       'fontWeight-basis': {
         $type: 'fontWeight',
@@ -366,7 +415,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a fontWeight',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'fontWeight-basis': {
         $type: 'fontWeight',
@@ -378,7 +427,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a number based fontWeight', () => {
+  it('Should parse a number based fontWeight token', () => {
     const input: TokenTree = {
       'fontWeight-basis': {
         $type: 'fontWeight',
@@ -386,7 +435,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a fontWeight',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'fontWeight-basis': {
         $type: 'fontWeight',
@@ -398,7 +447,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a duration', () => {
+  it('Should parse a duration token', () => {
     const input: TokenTree = {
       'duration-basis': {
         $type: 'duration',
@@ -406,7 +455,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a duration',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'duration-basis': {
         $type: 'duration',
@@ -418,7 +467,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a cubicBezier', () => {
+  it('Should parse a cubicBezier token', () => {
     const input: TokenTree = {
       'cubicBezier-basis': {
         $type: 'cubicBezier',
@@ -426,7 +475,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a cubicBezier',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'cubicBezier-basis': {
         $type: 'cubicBezier',
@@ -438,7 +487,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a shadow', () => {
+  it('Should parse a shadow token', () => {
     const input: TokenTree = {
       'shadow-basis': {
         $type: 'shadow',
@@ -452,7 +501,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a shadow',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'shadow-basis': {
         $type: 'shadow',
@@ -470,7 +519,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a string based strokeStyle', () => {
+  it('Should parse a string based strokeStyle token', () => {
     const input: TokenTree = {
       'strokeStyle-basis': {
         $type: 'strokeStyle',
@@ -478,7 +527,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a strokeStyle',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'strokeStyle-basis': {
         $type: 'strokeStyle',
@@ -490,7 +539,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of an object based strokeStyle', () => {
+  it('Should parse an object based strokeStyle token', () => {
     const input: TokenTree = {
       'strokeStyle-basis': {
         $type: 'strokeStyle',
@@ -501,7 +550,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a strokeStyle',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'strokeStyle-basis': {
         $type: 'strokeStyle',
@@ -516,7 +565,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a border', () => {
+  it('Should parse a border token', () => {
     const input: TokenTree = {
       'border-basis': {
         $type: 'border',
@@ -528,7 +577,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a border',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'border-basis': {
         $type: 'border',
@@ -544,7 +593,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a transition', () => {
+  it('Should parse a transition token', () => {
     const input: TokenTree = {
       'transition-basis': {
         $type: 'transition',
@@ -556,7 +605,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a transition',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'transition-basis': {
         $type: 'transition',
@@ -572,7 +621,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a gradient', () => {
+  it('Should parse a gradient token', () => {
     const input: TokenTree = {
       'gradient-basis': {
         $type: 'gradient',
@@ -586,7 +635,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a gradient',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'gradient-basis': {
         $type: 'gradient',
@@ -604,7 +653,7 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should parseTokensTree of a typography', () => {
+  it('Should parse a typography token', () => {
     const input: TokenTree = {
       'typography-basis': {
         $type: 'typography',
@@ -618,7 +667,7 @@ describe.concurrent('parseTokensTree', () => {
         $description: 'This is a typography',
       },
     };
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'typography-basis': {
         $type: 'typography',
@@ -637,7 +686,7 @@ describe.concurrent('parseTokensTree', () => {
     expect(result).toEqual(output);
   });
 
-  it('Should parseTokensTree of a group of colors', () => {
+  it('Should parse a group of colors', () => {
     const input = {
       colors: {
         $type: 'color',
@@ -650,7 +699,7 @@ describe.concurrent('parseTokensTree', () => {
         },
       },
     } as const;
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       colors: {
         $type: 'color',
@@ -673,27 +722,49 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should keep $description and $extensions of a group', () => {
+  it('Should keep $description of a group', () => {
     const input = {
       colors: {
         $type: 'color',
         $description: 'This is a group of colors',
-        $extensions: { 'tool-based-extension': 'some-value' },
       },
     } as const;
 
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       colors: {
         $type: 'color',
         $description: 'This is a group of colors',
-        $extensions: { 'tool-based-extension': 'some-value' },
         _kind: 'group',
         _path: ['colors'],
       },
     };
     expect(result).toEqual(output);
   });
+  it('Should keep $description and $extensions of a token', () => {
+    const input = {
+      'a-color': {
+        $type: 'color',
+        $value: '#000000',
+        $description: 'This is a color token',
+        $extensions: { 'com.nclsndr.customValue': 'some-value' },
+      },
+    } as const;
+
+    const result = parseDesignTokens(input);
+    const output = {
+      'a-color': {
+        $type: 'color',
+        $value: '#000000',
+        $description: 'This is a color token',
+        $extensions: { 'com.nclsndr.customValue': 'some-value' },
+        _kind: 'token',
+        _path: ['a-color'],
+      },
+    };
+    expect(result).toEqual(output);
+  });
+
   it('Should resolve a simple alias', () => {
     const input = {
       colors: {
@@ -707,7 +778,7 @@ describe.concurrent('parseTokensTree', () => {
         },
       },
     } as const;
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
 
     const output = {
       colors: {
@@ -751,7 +822,7 @@ describe.concurrent('parseTokensTree', () => {
         $value: '{base-colors.primary}',
       },
     } as const;
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'base-colors': {
         $type: 'color',
@@ -793,7 +864,7 @@ describe.concurrent('parseTokensTree', () => {
       },
     } as const;
 
-    expect(() => parseTokensTree(input)).toThrowError(
+    expect(() => parseDesignTokens(input)).toThrowError(
       'Type mismatch: color !== String at path "another-color"'
     );
   });
@@ -822,7 +893,7 @@ describe.concurrent('parseTokensTree', () => {
         },
       },
     } as const;
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     expect(result).toEqual({
       colors: {
         $type: 'color',
@@ -991,7 +1062,7 @@ describe.concurrent('parseTokensTree', () => {
         ],
       },
     } as const;
-    const result = parseTokensTree(input);
+    const result = parseDesignTokens(input);
     const output = {
       'brand-primary': {
         $type: 'color',
@@ -1039,41 +1110,41 @@ describe.concurrent('parseTokensTree', () => {
     };
     expect(result).toEqual(output);
   });
-  it('Should fail resolving a non existing alias at top level', async () => {
+  it('Should fail resolving a non existing alias at top level', () => {
     const input = {
       color: {
         $type: 'color',
         $value: '{colors.primary}',
       },
     } as const;
-    expect(() => parseTokensTree(input)).toThrow(
+    expect(() => parseDesignTokens(input)).toThrow(
       `Alias "${input.color.$value.slice(
         1,
         -1
       )}" not found in context: ${JSON.stringify(input)}`
     );
   });
-  it('Should fail resolving a token with an invalid $type', async () => {
+  it('Should fail resolving a token with an invalid $type', () => {
     const input = {
       'invalid-token': {
         $type: 'invalid',
         $value: 0,
       },
     } as const;
-    expect(() => parseTokensTree(input as any)).toThrow(`invalid_union`);
+    expect(() => parseDesignTokens(input as any)).toThrow(`invalid_union`);
   });
-  it('Should fail resolving an invalid color type with number value', async () => {
+  it('Should fail resolving an invalid color type with number value', () => {
     const input = {
       'primary-color': {
         $type: 'color',
         $value: 12,
       },
     } as const;
-    expect(() => parseTokensTree(input)).toThrow(
+    expect(() => parseDesignTokens(input)).toThrow(
       `Expected string, received number`
     );
   });
-  it('Should fail resolving an invalid border type with invalid value', async () => {
+  it('Should fail resolving an invalid border type with invalid value', () => {
     const input = {
       'border-basis': {
         $type: 'border',
@@ -1082,13 +1153,13 @@ describe.concurrent('parseTokensTree', () => {
         },
       },
     } as const;
-    expect(() => parseTokensTree(input)).toThrow(
+    expect(() => parseDesignTokens(input)).toThrow(
       `Expected string, received number`
     );
   });
 
-  it('Should work with example https://design-tokens.github.io/community-group/format/#example-advanced-composite-token-example', async () => {
-    const results = parseTokensTree({
+  it('Should work with example https://design-tokens.github.io/community-group/format/#example-advanced-composite-token-example', () => {
+    const results = parseDesignTokens({
       space: {
         small: {
           $type: 'dimension',
@@ -1235,5 +1306,60 @@ describe.concurrent('parseTokensTree', () => {
         },
       },
     });
+  });
+});
+
+describe.concurrent('resolveAlias', () => {
+  it('Should resolve a simple alias', () => {
+    const rawAlias = '{entry}';
+    const context = {
+      entry: {
+        $type: 'color',
+        $value: '#000000',
+      },
+    } as const;
+    const results = resolveAlias(rawAlias, context);
+    expect(results).toEqual({
+      ...context.entry,
+      _kind: 'alias',
+      _name: 'entry',
+      _path: ['entry'],
+    });
+  });
+  it('Should resolve a nested alias', () => {
+    const rawAlias = '{second}';
+    const context = {
+      first: {
+        $type: 'color',
+        $value: '#000000',
+      },
+      second: {
+        $type: 'color',
+        $value: '{first}',
+      },
+    } as const;
+    const results = resolveAlias(rawAlias, context);
+    expect(results).toEqual({
+      $type: 'color',
+      $value: {
+        $type: 'color',
+        $value: '#000000',
+        _kind: 'alias',
+        _path: ['first'],
+        _name: 'first',
+      },
+      _kind: 'alias',
+      _path: ['second'],
+      _name: 'second',
+    });
+  });
+  it('Should fail trying to access to an undefined alias', () => {
+    const rawAlias = '{}';
+    const context = {};
+    expect(() => resolveAlias(rawAlias, context)).toThrow(
+      `Alias "${rawAlias.slice(1, -1)}" not found in context: ${JSON.stringify(
+        context
+      )}`
+    );
   });
 });

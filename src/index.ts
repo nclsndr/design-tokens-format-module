@@ -1,3 +1,3 @@
-export { parseTokensTree } from './parseTokensTree.js';
+export { parseDesignTokens } from './parseDesignTokens.js';
 
 export * from './types/index.js';
