@@ -1,7 +1,7 @@
 {
   "name": "design-tokens-format-module",
   "description": "A Typescript implementation of the Design Tokens Format Module specification",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "homepage": "https://github.com/nclsndr/design-tokens-format-module",
   "license": "MIT",
   "author": "Nico Andre <hello@nclsndr.com>",
