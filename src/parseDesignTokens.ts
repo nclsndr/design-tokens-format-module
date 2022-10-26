@@ -15,13 +15,20 @@ import { inferJSONValueType } from './utils/inferJSONValueType.js';
 
 const { get, omitBy } = allLodash;
 
-export function resolveAlias(rawAlias: string, context?: TokenTree) {
+export function resolveAlias(
+  rawAlias: string,
+  options?: ParseDesignTokensOptions,
+  context?: TokenTree
+) {
   // rawAlias is like {colors.primary}
   const alias = rawAlias.slice(1, -1);
   const currentPath = alias.split('.');
   const foundEntry = get(context, alias) as TokenTree;
   if (foundEntry) {
-    const tokenName = alias.split('.').pop();
+    if (!options?.resolveAliases) {
+      return rawAlias;
+    }
+    const tokenName = alias.split('.').pop() as string;
     const parentPath = alias.split('.').slice(0, -1).join('.');
     const maybeParent =
       parentPath.length > 0
@@ -29,7 +36,8 @@ export function resolveAlias(rawAlias: string, context?: TokenTree) {
         : undefined;
 
     const result = parseDesignTokens(
-      tokenName ? { [tokenName]: foundEntry } : {},
+      { [tokenName]: foundEntry },
+      options,
       maybeParent,
       context,
       currentPath
@@ -38,19 +46,28 @@ export function resolveAlias(rawAlias: string, context?: TokenTree) {
 
     return {
       ...formatted,
-      _kind: 'alias' as const,
-      _name: tokenName ?? null,
-      _path: currentPath,
+      ...(options?.publishMetadata
+        ? {
+            _kind: 'alias' as const,
+            _name: tokenName,
+            _path: currentPath,
+          }
+        : {}),
     };
   } else {
     throw new Error(
-      `Alias "${alias}" not found in context: ${JSON.stringify(context)}`
+      `Alias "${alias}" not found in context: ${JSON.stringify(
+        context,
+        null,
+        2
+      )}`
     );
   }
 }
 
 function resolveObjectValue(
   value: Omit<TokenValue, string | symbol | number>,
+  options?: ParseDesignTokensOptions,
   parent?: TokenTree,
   context?: TokenTree,
   path: Array<string> = []
@@ -60,17 +77,17 @@ function resolveObjectValue(
     if (matchIsAlias(value)) {
       return {
         ...acc,
-        [key]: resolveAlias(value as string, context),
+        [key]: resolveAlias(value as string, options, context),
       };
     } else if (Array.isArray(value)) {
       return {
         ...acc,
-        [key]: resolveArrayValue(value, parent, context, currentPath),
+        [key]: resolveArrayValue(value, options, parent, context, currentPath),
       };
     } else if (value !== null && typeof value === 'object') {
       return {
         ...acc,
-        [key]: resolveObjectValue(value, parent, context, currentPath),
+        [key]: resolveObjectValue(value, options, parent, context, currentPath),
       };
     } else {
       return {
@@ -83,6 +100,7 @@ function resolveObjectValue(
 
 function resolveArrayValue(
   value: TokenValue[],
+  options?: ParseDesignTokensOptions,
   parent?: TokenTree,
   context?: TokenTree,
   path: Array<string> = []
@@ -90,23 +108,35 @@ function resolveArrayValue(
   return value.map((item, i) => {
     const currentPath = path.concat(`[${i}]`);
     if (matchIsAlias(item)) {
-      return resolveAlias(item as string, context);
+      return resolveAlias(item as string, options, context);
     } else if (Array.isArray(item)) {
-      return resolveArrayValue(item, parent, context, currentPath);
+      return resolveArrayValue(item, options, parent, context, currentPath);
     } else if (item !== null && typeof item === 'object') {
-      return resolveObjectValue(item, parent, context, currentPath);
+      return resolveObjectValue(item, options, parent, context, currentPath);
     }
 
     return item;
   });
 }
 
-export function parseDesignTokens(
+export type ParseDesignTokensOptions<
+  RA extends boolean = boolean,
+  PM extends boolean = boolean
+> = {
+  resolveAliases?: RA;
+  publishMetadata?: PM;
+};
+
+export function parseDesignTokens<
+  RA extends boolean = false,
+  PM extends boolean = false
+>(
   tokens: TokenTree,
+  options?: ParseDesignTokensOptions<RA, PM>,
   parent?: TokenTree,
   context?: TokenTree,
   path: Array<string> = []
-): ConcreteTokenTree {
+): ConcreteTokenTree<RA, PM> {
   if (!context) {
     context = tokens;
   }
@@ -131,11 +161,23 @@ export function parseDesignTokens(
 
       let finalValue: TokenValue = $value;
       if (isAlias) {
-        finalValue = resolveAlias($value as string, context);
+        finalValue = resolveAlias($value as string, options, context);
       } else if (Array.isArray($value)) {
-        finalValue = resolveArrayValue($value, parent, context, currentPath);
+        finalValue = resolveArrayValue(
+          $value,
+          options,
+          parent,
+          context,
+          currentPath
+        );
       } else if ($value !== null && typeof $value === 'object') {
-        finalValue = resolveObjectValue($value, parent, context, currentPath);
+        finalValue = resolveObjectValue(
+          $value,
+          options,
+          parent,
+          context,
+          currentPath
+        );
       }
 
       if (
@@ -168,8 +210,12 @@ export function parseDesignTokens(
           $value: finalValue,
           ...($description ? { $description } : {}),
           ...($extensions ? { $extensions } : {}),
-          _kind: 'token' as const,
-          _path: currentPath,
+          ...(options?.publishMetadata
+            ? {
+                _kind: 'token' as const,
+                _path: currentPath,
+              }
+            : {}),
         },
       };
     } else {
@@ -186,6 +232,7 @@ export function parseDesignTokens(
             ...acc,
             ...parseDesignTokens(
               { [k]: v } as TokenTree,
+              options,
               value as TokenTree,
               context,
               currentPath
@@ -198,8 +245,12 @@ export function parseDesignTokens(
         [name]: {
           ...(maybeType ? { $type: maybeType } : {}),
           ...($description ? { $description } : {}),
-          _kind: 'group' as const,
-          _path: currentPath,
+          ...(options?.publishMetadata
+            ? {
+                _kind: 'group' as const,
+                _path: currentPath,
+              }
+            : {}),
           ...merged,
         },
       };

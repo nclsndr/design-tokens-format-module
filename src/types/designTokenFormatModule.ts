@@ -39,15 +39,17 @@ export type FontWeightNomenclature = {
   };
 };
 
-type Alias = `{${string}}`;
+export type DesignTokenAlias = `{${string}}`;
 
 // JSON token value types
-type JSONStringValue = string | Alias;
-type JSONNumberValue = number | Alias;
-type JSONBooleanValue = boolean | Alias;
-type JSONNullValue = null | Alias;
-type JSONArrayValue = Array<JSONTokenValue> | Alias;
-export type JSONObjectValue = { [key: string]: JSONTokenValue } | Alias;
+type JSONStringValue = string | DesignTokenAlias;
+type JSONNumberValue = number | DesignTokenAlias;
+type JSONBooleanValue = boolean | DesignTokenAlias;
+type JSONNullValue = null | DesignTokenAlias;
+type JSONArrayValue = Array<JSONTokenValue> | DesignTokenAlias;
+export type JSONObjectValue =
+  | { [key: string]: JSONTokenValue }
+  | DesignTokenAlias;
 export type JSONTokenValue =
   | JSONStringValue
   | JSONNumberValue
@@ -55,20 +57,20 @@ export type JSONTokenValue =
   | JSONNullValue
   | JSONObjectValue
   | JSONArrayValue
-  | Alias;
+  | DesignTokenAlias;
 
 // Primitive token value types
-type ColorValue = `#${string}` | Alias; // #ff00ff (opaque) | #00000088 (transparent)
-type DimensionValue = string | Alias; // 1px | 1rem | 1em | 1% | 1vh | 1vw | 1vmin | 1vmax
-type FontFamilyValue = string | string[] | Alias; // "Helvetica" | ["Helvetica", "Arial", sans-serif]
+type ColorValue = `#${string}` | DesignTokenAlias; // #ff00ff (opaque) | #00000088 (transparent)
+type DimensionValue = string | DesignTokenAlias; // 1px | 1rem | 1em | 1% | 1vh | 1vw | 1vmin | 1vmax
+type FontFamilyValue = string | string[] | DesignTokenAlias; // "Helvetica" | ["Helvetica", "Arial", sans-serif]
 type FontWeightValue =
   | number // [1-1000]
   | FontWeightNomenclature[keyof FontWeightNomenclature]['value'] // 'thin' | 'hairline' | 'extra-light' | 'ultra-light' | 'light' | 'normal' | 'regular' | 'book' | 'medium' | 'semi-bold' | 'demi-bold' | 'bold' | 'extra-bold' | 'ultra-bold' | 'black' | 'heavy' | 'extra-black' | 'ultra-black'
-  | Alias;
-type DurationValue = `${number}ms` | Alias; // 100ms
+  | DesignTokenAlias;
+type DurationValue = `${number}ms` | DesignTokenAlias; // 100ms
 type CubicBezierValue =
   | [P1x: number, P1y: number, P2x: number, P2y: number]
-  | Alias; // [P1x, P1y, P2x, P2y]
+  | DesignTokenAlias; // [P1x, P1y, P2x, P2y]
 
 // Composite token value types
 type ShadowValue =
@@ -79,7 +81,7 @@ type ShadowValue =
       blur: DimensionValue;
       spread: DimensionValue;
     }
-  | Alias;
+  | DesignTokenAlias;
 
 type StrokeStyleValue =
   | 'solid'
@@ -94,7 +96,7 @@ type StrokeStyleValue =
       dashArray: DimensionValue[];
       lineCap: 'round' | 'butt' | 'square';
     }
-  | Alias;
+  | DesignTokenAlias;
 
 type BorderValue =
   | {
@@ -102,7 +104,7 @@ type BorderValue =
       width: DimensionValue;
       style: StrokeStyleValue;
     }
-  | Alias;
+  | DesignTokenAlias;
 
 type TransitionValue =
   | {
@@ -110,14 +112,14 @@ type TransitionValue =
       delay: DurationValue;
       timingFunction: CubicBezierValue;
     }
-  | Alias;
+  | DesignTokenAlias;
 
 type GradientValue =
   | Array<{
       color: ColorValue;
       position: JSONNumberValue;
     }>
-  | Alias;
+  | DesignTokenAlias;
 
 type TypographyValue =
   | {
@@ -127,7 +129,7 @@ type TypographyValue =
       letterSpacing: DimensionValue;
       lineHeight: JSONStringValue;
     }
-  | Alias;
+  | DesignTokenAlias;
 
 export type TokenValue =
   | JSONTokenValue
