@@ -39,7 +39,7 @@ const parsedTokens = {
     $type: 'color',
       $value: '#000000',
       $description: 'This is a color',
-      _kind: 'token',
+      _kind: 'token', 
       _path: ['a-color'],
   }
 };
@@ -95,6 +95,191 @@ const parsedTokens = {
 ```
 
 ## API
+
+
+### Token tree
+
+The `TokenTree` is the JSON Object data structure that represents the entire design tokens document.
+
+```typescript
+type TokenTree = {
+  [name: string]: DesignToken | TokenGroup | TokenTree;
+};
+```
+
+At each level of the token tree, we can have either an actual design token, a token group or yet another token tree, recursively.
+
+#### Aliasing
+
+In order to avoid duplication of declarations, a DesignToken can reference another DesignToken using the `$value` property and the `{token.path}` syntax.
+
+```typescript
+type Alias = `{${string}}` // e.g. {colors.primary}
+```
+
+### Token types
+
+We distinguish 3 categories of design tokens:
+- JSON values (string, number, boolean, ...)
+- Primitive Design Tokens (color, duration, ...)
+- Composite Design Tokens (border, shadow, ...)
+
+#### JSON types
+
+They are the only types we might infer if not provided explicitly in the given `TokenTree`.
+
+```typescript
+type JSONTokenType = 'string' | 'number' | 'boolean' | 'null' | 'array' | 'object'
+```
+
+#### Color
+
+type name: `'color'`
+
+```typescript
+type ColorValue = `#${string}` | Alias
+```
+
+#### Dimension
+
+type name: `'dimension'`
+
+```typescript
+type DimensionValue = string | Alias; // 1px | 1rem | 1vh ...
+```
+
+#### Font Family
+
+type name: `'fontFamily'`
+
+```typescript
+type FontFamilyValue = string | string[] | Alias; // "Helvetica" | ["Helvetica", "Arial", sans-serif]
+```
+
+#### Font Weight
+
+type name: `'fontWeight'`
+
+```typescript
+type FontWeightValue =
+  | number // [1-1000]
+  | FontWeightNomenclature[keyof FontWeightNomenclature]['value'] // 'thin' | 'hairline' | 'extra-light' | 'ultra-light' | 'light' | 'normal' | 'regular' | 'book' | 'medium' | 'semi-bold' | 'demi-bold' | 'bold' | 'extra-bold' | 'ultra-bold' | 'black' | 'heavy' | 'extra-black' | 'ultra-black'
+  | Alias;
+```
+
+#### Duration
+
+type name: `'duration'`
+
+```typescript
+type DurationValue = `${number}ms` | Alias; // 100ms
+```
+
+#### Cubic Bezier
+
+type name: `'cubicBezier'`
+
+```typescript
+type CubicBezierValue =
+  | [P1x: number, P1y: number, P2x: number, P2y: number]
+  | Alias;
+```
+
+#### Shadow
+
+type name: `'shadow'`
+
+```typescript
+type ShadowValue =
+  | {
+  color: ColorValue;
+  offsetX: DimensionValue;
+  offsetY: DimensionValue;
+  blur: DimensionValue;
+  spread: DimensionValue;
+}
+  | Alias;
+```
+
+#### Stroke Style
+
+type name: `'strokeStyle'`
+
+```typescript
+type StrokeStyleValue =
+  | 'solid'
+  | 'dashed'
+  | 'dotted'
+  | 'double'
+  | 'groove'
+  | 'ridge'
+  | 'outset'
+  | 'inset'
+  | {
+  dashArray: DimensionValue[];
+  lineCap: 'round' | 'butt' | 'square';
+}
+  | Alias;
+```
+
+#### Border
+
+type name: `'border'`
+
+```typescript
+type BorderValue =
+  | {
+  color: ColorValue;
+  width: DimensionValue;
+  style: StrokeStyleValue;
+}
+  | Alias;
+```
+
+#### Transition
+
+type name: `'transition'`
+
+```typescript
+type TransitionValue =
+  | {
+  duration: DurationValue;
+  delay: DurationValue;
+  timingFunction: CubicBezierValue;
+}
+  | Alias;
+```
+
+#### Gradient
+
+type name: `'gradient'`
+
+```typescript
+type GradientValue =
+  | Array<{
+  color: ColorValue;
+  position: JSONNumberValue;
+}>
+  | Alias;
+```
+
+#### Typography
+
+type name: `'typography'`
+
+```typescript
+type TypographyValue =
+  | {
+  fontFamily: FontFamilyValue;
+  fontSize: DimensionValue;
+  fontWeight: FontWeightValue;
+  letterSpacing: DimensionValue;
+  lineHeight: JSONStringValue;
+}
+  | Alias;
+```
+
+### Utility functions
 
 #### parseDesignTokens
 
