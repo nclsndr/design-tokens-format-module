@@ -56,27 +56,27 @@ type ConcreteStrokeValue =
 
 type ConcreteTokenTypeValueGuard =
   | {
-      $type: 'String';
+      $type: 'string';
       $value: ConcreteJSONStringValue;
     }
   | {
-      $type: 'Number';
+      $type: 'number';
       $value: ConcreteJSONNumberValue;
     }
   | {
-      $type: 'Boolean';
+      $type: 'boolean';
       $value: ConcreteJSONBooleanValue;
     }
   | {
-      $type: 'Null';
+      $type: 'null';
       $value: ConcreteJSONNullValue;
     }
   | {
-      $type: 'Object';
+      $type: 'object';
       $value: ConcreteJSONObjectValue;
     }
   | {
-      $type: 'Array';
+      $type: 'array';
       $value: ConcreteJSONArrayValue;
     }
   | {

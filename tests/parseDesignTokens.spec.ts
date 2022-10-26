@@ -119,7 +119,7 @@ describe.concurrent('parseDesignTokens', () => {
     const result = parseDesignTokens(input);
     const output = {
       'null-token': {
-        $type: 'Null',
+        $type: 'null',
         $value: null,
         $description: 'This is a null value',
         _kind: 'token',
@@ -138,7 +138,7 @@ describe.concurrent('parseDesignTokens', () => {
     const result = parseDesignTokens(input);
     const output = {
       'string-token': {
-        $type: 'String',
+        $type: 'string',
         $value: 'string',
         $description: 'This is a string value',
         _kind: 'token',
@@ -157,7 +157,7 @@ describe.concurrent('parseDesignTokens', () => {
     const result = parseDesignTokens(input);
     const output = {
       'boolean-token': {
-        $type: 'Boolean',
+        $type: 'boolean',
         $value: true,
         $description: 'This is a boolean value',
         _kind: 'token',
@@ -176,7 +176,7 @@ describe.concurrent('parseDesignTokens', () => {
     const result = parseDesignTokens(input);
     const output = {
       'object-literal-token': {
-        $type: 'Object',
+        $type: 'object',
         $value: { dope: true, array: [1, 2, 3], object: { key: 'ok' } },
         $description: 'This is a custom object value',
         _kind: 'token',
@@ -205,7 +205,7 @@ describe.concurrent('parseDesignTokens', () => {
         _path: ['some-token'],
       },
       'array-value-token': {
-        $type: 'Array',
+        $type: 'array',
         $value: [
           { dope: true },
           {
@@ -233,7 +233,7 @@ describe.concurrent('parseDesignTokens', () => {
     const result = parseDesignTokens(input);
     const output = {
       'string-token': {
-        $type: 'String',
+        $type: 'string',
         $value: 'a value',
         _kind: 'token',
         _path: ['string-token'],
@@ -250,7 +250,7 @@ describe.concurrent('parseDesignTokens', () => {
     const result = parseDesignTokens(input);
     const output = {
       'number-token': {
-        $type: 'Number',
+        $type: 'number',
         $value: 1,
         _kind: 'token',
         _path: ['number-token'],
@@ -267,7 +267,7 @@ describe.concurrent('parseDesignTokens', () => {
     const result = parseDesignTokens(input);
     const output = {
       'boolean-token': {
-        $type: 'Boolean',
+        $type: 'boolean',
         $value: true,
         _kind: 'token',
         _path: ['boolean-token'],
@@ -284,7 +284,7 @@ describe.concurrent('parseDesignTokens', () => {
     const result = parseDesignTokens(input);
     const output = {
       'null-token': {
-        $type: 'Null',
+        $type: 'null',
         $value: null,
         _kind: 'token',
         _path: ['null-token'],
@@ -301,7 +301,7 @@ describe.concurrent('parseDesignTokens', () => {
     const result = parseDesignTokens(input);
     const output = {
       'object-literal-token': {
-        $type: 'Object',
+        $type: 'object',
         $value: {},
         _kind: 'token',
         _path: ['object-literal-token'],
@@ -318,7 +318,7 @@ describe.concurrent('parseDesignTokens', () => {
     const result = parseDesignTokens(input);
     const output = {
       'array-literal-token': {
-        $type: 'Array',
+        $type: 'array',
         $value: [],
         _kind: 'token',
         _path: ['array-literal-token'],
@@ -855,7 +855,7 @@ describe.concurrent('parseDesignTokens', () => {
   it('Should fail resolving a token $type based on its alias when not identical', () => {
     const input = {
       'base-colors': {
-        $type: 'String',
+        $type: 'string',
         $value: 'a custom value',
       },
       'another-color': {
@@ -865,7 +865,7 @@ describe.concurrent('parseDesignTokens', () => {
     } as const;
 
     expect(() => parseDesignTokens(input)).toThrowError(
-      'Type mismatch: color !== String at path "another-color"'
+      'Type mismatch: color !== string at path "another-color"'
     );
   });
   it('Should resolve 6 aliases depth', () => {
@@ -1041,7 +1041,6 @@ describe.concurrent('parseDesignTokens', () => {
         $value: '#99ff66',
       },
       'position-end': {
-        $type: 'Number',
         $value: 1,
       },
       'brand-in-the-middle': {
@@ -1071,7 +1070,7 @@ describe.concurrent('parseDesignTokens', () => {
         _path: ['brand-primary'],
       },
       'position-end': {
-        $type: 'Number',
+        $type: 'number',
         $value: 1,
         _kind: 'token',
         _path: ['position-end'],
@@ -1096,7 +1095,7 @@ describe.concurrent('parseDesignTokens', () => {
           {
             color: '#000000',
             position: {
-              $type: 'Number',
+              $type: 'number',
               $value: 1,
               _kind: 'alias',
               _path: ['position-end'],

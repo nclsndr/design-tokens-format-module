@@ -2,17 +2,17 @@ import { JSONTokenType } from '../types/designTokenFormatModule.js';
 
 export function inferJSONValueType(value: unknown): JSONTokenType {
   if (value === null) {
-    return 'Null';
+    return 'null';
   } else if (Array.isArray(value)) {
-    return 'Array';
+    return 'array';
   } else if (typeof value === 'object') {
-    return 'Object';
+    return 'object';
   } else if (typeof value === 'string') {
-    return 'String';
+    return 'string';
   } else if (typeof value === 'number') {
-    return 'Number';
+    return 'number';
   } else if (typeof value === 'boolean') {
-    return 'Boolean';
+    return 'boolean';
   } else {
     throw new Error(`Unexpected type "${typeof value}" of value "${value}"`);
   }

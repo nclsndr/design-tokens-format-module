@@ -2,12 +2,12 @@ import { z, ZodType } from 'zod';
 
 export const JSONTokenTypeNameSchema = z.union(
   [
-    z.literal('String'),
-    z.literal('Number'),
-    z.literal('Boolean'),
-    z.literal('Null'),
-    z.literal('Object'),
-    z.literal('Array'),
+    z.literal('string'),
+    z.literal('number'),
+    z.literal('boolean'),
+    z.literal('null'),
+    z.literal('object'),
+    z.literal('array'),
   ],
   {
     required_error: 'Invalid token type provided',
@@ -171,12 +171,12 @@ export const tokenTypeAndValueSchemasMap: Record<
   z.infer<typeof tokenTypeSchema>,
   ZodType
 > = {
-  String: JSONStringSchema,
-  Number: JSONNumberSchema,
-  Boolean: JSONBooleanSchema,
-  Null: JSONNullSchema,
-  Object: JSONObjectSchema,
-  Array: JSONArraySchema,
+  string: JSONStringSchema,
+  number: JSONNumberSchema,
+  boolean: JSONBooleanSchema,
+  null: JSONNullSchema,
+  object: JSONObjectSchema,
+  array: JSONArraySchema,
   color: colorValueSchema,
   dimension: dimensionValueSchema,
   fontFamily: fontFamilyValueSchema,

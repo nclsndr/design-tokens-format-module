@@ -5,32 +5,32 @@ import { validateTokenValue } from '../../src/utils/validateTokenValue.js';
 describe('validateTokenValue', () => {
   it('Should validate a JSON String type', () => {
     const value = 'someString';
-    const parsed = validateTokenValue('String', value);
+    const parsed = validateTokenValue('string', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a JSON Number type', () => {
     const value = 123;
-    const parsed = validateTokenValue('Number', value);
+    const parsed = validateTokenValue('number', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a JSON Boolean type', () => {
     const value = true;
-    const parsed = validateTokenValue('Boolean', value);
+    const parsed = validateTokenValue('boolean', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a JSON Null type', () => {
     const value = null;
-    const parsed = validateTokenValue('Null', value);
+    const parsed = validateTokenValue('null', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a JSON Object type', () => {
     const value = { some: 'object', with: 123, values: true };
-    const parsed = validateTokenValue('Object', value);
+    const parsed = validateTokenValue('object', value);
     expect(parsed).toEqual(value);
   });
   it('Should validate a JSON Array type', () => {
     const value = ['some', 'array', 1, true];
-    const parsed = validateTokenValue('Array', value);
+    const parsed = validateTokenValue('array', value);
     expect(parsed).toEqual(value);
   });
   it('Should validate a color type', () => {
