@@ -144,7 +144,7 @@ export type TokenValue =
   | GradientValue
   | TypographyValue;
 
-export type TokenUnit = {
+export type DesignToken = {
   // Token
   $value: TokenValue;
   $type?: TokenType;
@@ -160,5 +160,5 @@ export type TokenGroup = {
 };
 
 export type TokenTree = {
-  [name: string]: TokenUnit | TokenGroup | TokenTree;
+  [name: string]: DesignToken | TokenGroup | TokenTree;
 };

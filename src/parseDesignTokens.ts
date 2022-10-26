@@ -4,10 +4,10 @@ import {
   TokenGroup,
   TokenTree,
   TokenType,
-  TokenUnit,
+  DesignToken,
   TokenValue,
 } from './types/designTokenFormatModule.js';
-import { ConcreteTokenTree } from './types/concreteTree.js';
+import { ConcreteTokenTree } from './types/concreteTokenTree.js';
 import { matchIsAlias } from './utils/matchIsAlias.js';
 import { validateTokenValue } from './utils/validateTokenValue.js';
 import { validateTokenAndGroupName } from './utils/validateTokenAndGroupName.js';
@@ -126,7 +126,7 @@ export function parseDesignTokens(
 
     // A Token has a $value
     if ('$value' in value && value.$value !== undefined) {
-      const { $description, $value, $extensions } = value as TokenUnit;
+      const { $description, $value, $extensions } = value as DesignToken;
       const isAlias = matchIsAlias($value);
 
       let finalValue: TokenValue = $value;
