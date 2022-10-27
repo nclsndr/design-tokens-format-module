@@ -1,71 +1,71 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 
-import { validateTokenValue } from '../../src/utils/validateTokenValue.js';
+import { validateDesignTokenValue } from '../../src/utils/validateDesignTokenValue.js';
 
 describe('validateTokenValue', () => {
   it('Should validate a JSON String type', () => {
     const value = 'someString';
-    const parsed = validateTokenValue('string', value);
+    const parsed = validateDesignTokenValue('string', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a JSON Number type', () => {
     const value = 123;
-    const parsed = validateTokenValue('number', value);
+    const parsed = validateDesignTokenValue('number', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a JSON Boolean type', () => {
     const value = true;
-    const parsed = validateTokenValue('boolean', value);
+    const parsed = validateDesignTokenValue('boolean', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a JSON Null type', () => {
     const value = null;
-    const parsed = validateTokenValue('null', value);
+    const parsed = validateDesignTokenValue('null', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a JSON Object type', () => {
     const value = { some: 'object', with: 123, values: true };
-    const parsed = validateTokenValue('object', value);
+    const parsed = validateDesignTokenValue('object', value);
     expect(parsed).toEqual(value);
   });
   it('Should validate a JSON Array type', () => {
     const value = ['some', 'array', 1, true];
-    const parsed = validateTokenValue('array', value);
+    const parsed = validateDesignTokenValue('array', value);
     expect(parsed).toEqual(value);
   });
   it('Should validate a color type', () => {
     const value = '#123456';
-    const parsed = validateTokenValue('color', value);
+    const parsed = validateDesignTokenValue('color', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a dimension type', () => {
     const value = '4px';
-    const parsed = validateTokenValue('dimension', value);
+    const parsed = validateDesignTokenValue('dimension', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a fontFamily type', () => {
     const value = 'Arial';
-    const parsed = validateTokenValue('fontFamily', value);
+    const parsed = validateDesignTokenValue('fontFamily', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a numerical fontWeight type', () => {
     const value = 400;
-    const parsed = validateTokenValue('fontWeight', value);
+    const parsed = validateDesignTokenValue('fontWeight', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a string based fontWeight type', () => {
     const value = 'light';
-    const parsed = validateTokenValue('fontWeight', value);
+    const parsed = validateDesignTokenValue('fontWeight', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a duration type', () => {
     const value = '80ms';
-    const parsed = validateTokenValue('duration', value);
+    const parsed = validateDesignTokenValue('duration', value);
     expect(parsed).toBe(value);
   });
   it('Should validate a cubicBezier type', () => {
     const value = [0.4, 0, 0.2, 1];
-    const parsed = validateTokenValue('cubicBezier', value);
+    const parsed = validateDesignTokenValue('cubicBezier', value);
     expect(parsed).toEqual(value);
   });
   it('Should validate a shadow type', () => {
@@ -76,12 +76,12 @@ describe('validateTokenValue', () => {
       blur: '3px',
       spread: '2px',
     };
-    const parsed = validateTokenValue('shadow', value);
+    const parsed = validateDesignTokenValue('shadow', value);
     expect(parsed).toEqual(value);
   });
   it('Should validate a string based strokeStyle type', () => {
     const value = 'solid';
-    const parsed = validateTokenValue('strokeStyle', value);
+    const parsed = validateDesignTokenValue('strokeStyle', value);
     expect(parsed).toBe(value);
   });
   it('Should validate an object based strokeStyle type', () => {
@@ -89,7 +89,7 @@ describe('validateTokenValue', () => {
       dashArray: ['2px', '4px'],
       lineCap: 'round',
     };
-    const parsed = validateTokenValue('strokeStyle', value);
+    const parsed = validateDesignTokenValue('strokeStyle', value);
     expect(parsed).toEqual(value);
   });
   it('Should validate a border type', () => {
@@ -98,7 +98,7 @@ describe('validateTokenValue', () => {
       width: '2px',
       style: 'solid',
     };
-    const parsed = validateTokenValue('border', value);
+    const parsed = validateDesignTokenValue('border', value);
     expect(parsed).toEqual(value);
   });
   it('Should validate a transition type', () => {
@@ -107,7 +107,7 @@ describe('validateTokenValue', () => {
       delay: '0ms',
       timingFunction: [0.5, 0, 1, 1],
     };
-    const parsed = validateTokenValue('transition', value);
+    const parsed = validateDesignTokenValue('transition', value);
     expect(parsed).toEqual(value);
   });
   it('Should validate a gradient type', () => {
@@ -121,7 +121,7 @@ describe('validateTokenValue', () => {
         position: 1,
       },
     ];
-    const parsed = validateTokenValue('gradient', value);
+    const parsed = validateDesignTokenValue('gradient', value);
     expect(parsed).toEqual(value);
   });
   it('Should validate a typography type', () => {
@@ -132,7 +132,7 @@ describe('validateTokenValue', () => {
       lineHeight: '24px',
       letterSpacing: '0px',
     };
-    const parsed = validateTokenValue('typography', value);
+    const parsed = validateDesignTokenValue('typography', value);
     expect(parsed).toEqual(value);
   });
 });
@@ -155,7 +155,7 @@ describe('validateTokenValue with mocks', () => {
     });
 
     expect(() => {
-      validateTokenValue(invalidTokenType as any, 'null');
+      validateDesignTokenValue(invalidTokenType as any, 'null');
     }).toThrowError(`No validator found for token type "${invalidTokenType}"`);
   });
 });

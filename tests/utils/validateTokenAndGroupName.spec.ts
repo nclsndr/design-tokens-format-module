@@ -1,15 +1,15 @@
 import { describe, it, expect } from 'vitest';
 
-import { validateTokenAndGroupName } from '../../src/utils/validateTokenAndGroupName.js';
+import { validateDesignTokenAndGroupName } from '../../src/utils/validateDesignTokenAndGroupName.js';
 
 describe('validateTokenAndGroupName', () => {
   it('Should validate a regular string', () => {
-    const parsed = validateTokenAndGroupName('someString');
+    const parsed = validateDesignTokenAndGroupName('someString');
     expect(parsed).toBe('someString');
   });
   it('Should fail validating a string with "."', () => {
     expect(() => {
-      validateTokenAndGroupName('some.string');
+      validateDesignTokenAndGroupName('some.string');
     }).toThrowError(`[
   {
     "code": "custom",
@@ -20,7 +20,7 @@ describe('validateTokenAndGroupName', () => {
   });
   it('Should fail validating a string with "{"', () => {
     expect(() => {
-      validateTokenAndGroupName('some{string');
+      validateDesignTokenAndGroupName('some{string');
     }).toThrowError(`[
   {
     "code": "custom",
@@ -31,7 +31,7 @@ describe('validateTokenAndGroupName', () => {
   });
   it('Should fail validating a string with "}"', () => {
     expect(() => {
-      validateTokenAndGroupName('some}string');
+      validateDesignTokenAndGroupName('some}string');
     }).toThrowError(`[
   {
     "code": "custom",

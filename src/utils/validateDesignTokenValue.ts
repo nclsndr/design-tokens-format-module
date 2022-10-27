@@ -6,7 +6,7 @@ import {
   tokenTypeSchema,
 } from './schemas.js';
 
-export function validateTokenValue(
+export function validateDesignTokenValue(
   tokenType: TokenType,
   tokenValue: TokenValue
 ) {

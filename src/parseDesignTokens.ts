@@ -9,8 +9,8 @@ import {
 } from './types/designTokenFormatModule.js';
 import { ConcreteTokenTree } from './types/concreteTokenTree.js';
 import { matchIsAlias } from './utils/matchIsAlias.js';
-import { validateTokenValue } from './utils/validateTokenValue.js';
-import { validateTokenAndGroupName } from './utils/validateTokenAndGroupName.js';
+import { validateDesignTokenValue } from './utils/validateDesignTokenValue.js';
+import { validateDesignTokenAndGroupName } from './utils/validateDesignTokenAndGroupName.js';
 import { inferJSONValueType } from './utils/inferJSONValueType.js';
 
 const { get, omitBy } = allLodash;
@@ -113,7 +113,7 @@ export function parseDesignTokens(
 
   return Object.entries(tokens).reduce((acc, [name, value]) => {
     // const { $type, $description, $value, $extensions, ...rest } = value
-    validateTokenAndGroupName(name);
+    validateDesignTokenAndGroupName(name);
     const currentPath = path.concat(name);
 
     let maybeType: TokenType | undefined;
@@ -159,7 +159,7 @@ export function parseDesignTokens(
       if (maybeType === undefined) {
         maybeType = inferJSONValueType($value);
       }
-      validateTokenValue(maybeType, $value);
+      validateDesignTokenValue(maybeType, $value);
 
       return {
         ...acc,
