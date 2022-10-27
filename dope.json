@@ -1,0 +1,27 @@
+{
+  "colors": {
+    "$type": "color",
+    "_kind": "group",
+    "_path": ["colors"],
+    "primary": {
+      "$type": "color",
+      "$value": "#000000",
+      "$description": "This is a primary color",
+      "_kind": "token",
+      "_path": ["colors", "primary"]
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": {
+        "$type": "color",
+        "$value": "#000000",
+        "$description": "This is a primary color",
+        "_kind": "alias",
+        "_path": ["colors", "primary"],
+        "_name": "primary"
+      },
+      "_kind": "token",
+      "_path": ["colors", "secondary"]
+    }
+  }
+}

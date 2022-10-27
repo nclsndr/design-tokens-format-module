@@ -1,4 +1,7 @@
-import { TokenType, TokenValue } from '../types/designTokenFormatModule.js';
+import {
+  DesignTokenType,
+  DesignTokenValue,
+} from '../types/designTokenFormatModule.js';
 import { matchIsAlias } from './matchIsAlias.js';
 import {
   aliasSchema,
@@ -7,8 +10,8 @@ import {
 } from './schemas.js';
 
 export function validateDesignTokenValue(
-  tokenType: TokenType,
-  tokenValue: TokenValue
+  tokenType: DesignTokenType,
+  tokenValue: DesignTokenValue
 ) {
   if (matchIsAlias(tokenValue)) {
     return aliasSchema.parse(tokenValue);

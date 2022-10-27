@@ -1,6 +1,6 @@
 import { z, ZodType } from 'zod';
 
-export const JSONTokenTypeNameSchema = z.union(
+export const JSONTypeNameSchema = z.union(
   [
     z.literal('string'),
     z.literal('number'),
@@ -17,7 +17,7 @@ export const JSONTokenTypeNameSchema = z.union(
 
 export const tokenTypeSchema = z.union(
   [
-    JSONTokenTypeNameSchema,
+    JSONTypeNameSchema,
     z.literal('color'),
     z.literal('dimension'),
     z.literal('fontFamily'),

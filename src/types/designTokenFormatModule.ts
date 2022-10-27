@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
-import { JSONTokenTypeNameSchema, tokenTypeSchema } from '../utils/schemas.js';
+import { JSONTypeNameSchema, tokenTypeSchema } from '../utils/schemas.js';
 import { JSONValue } from './JSON.js';
 
-export type JSONTokenType = z.infer<typeof JSONTokenTypeNameSchema>;
-export type TokenType = z.infer<typeof tokenTypeSchema>;
+export type JSONTypeName = z.infer<typeof JSONTypeNameSchema>;
+export type DesignTokenType = z.infer<typeof tokenTypeSchema>;
 
 export type FontWeightNomenclature = {
   100: {
@@ -131,7 +131,7 @@ type TypographyValue =
     }
   | DesignTokenAlias;
 
-export type TokenValue =
+export type DesignTokenValue =
   | JSONTokenValue
   | ColorValue
   | DimensionValue
@@ -147,20 +147,20 @@ export type TokenValue =
   | TypographyValue;
 
 export type DesignToken = {
-  // Token
-  $value: TokenValue;
-  $type?: TokenType;
+  // $value is the Token signature
+  $value: DesignTokenValue;
+  $type?: DesignTokenType;
   $description?: string;
   $extensions?: JSONValue;
 };
 
-export type TokenGroup = {
-  // Group
-  $type?: TokenType;
-  $description?: string;
+export type DesignTokenGroup = {
+  // Anything is a Group otherwise
   // $value: never
+  $type?: DesignTokenType;
+  $description?: string;
 };
 
-export type TokenTree = {
-  [name: string]: DesignToken | TokenGroup | TokenTree;
+export type DesignTokenTree = {
+  [name: string]: DesignToken | DesignTokenGroup | DesignTokenTree;
 };

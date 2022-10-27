@@ -1,6 +1,6 @@
-import { JSONTokenType } from '../types/designTokenFormatModule.js';
+import { JSONTypeName } from '../types/designTokenFormatModule.js';
 
-export function inferJSONValueType(value: unknown): JSONTokenType {
+export function inferJSONValueType(value: unknown): JSONTypeName {
   if (value === null) {
     return 'null';
   } else if (Array.isArray(value)) {

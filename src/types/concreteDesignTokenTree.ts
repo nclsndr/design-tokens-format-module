@@ -2,7 +2,7 @@ import {
   DesignTokenAlias,
   FontWeightNomenclature,
   JSONObjectValue,
-  TokenType,
+  DesignTokenType,
 } from './designTokenFormatModule.js';
 
 export type ConcreteDesignTokenAlias<
@@ -16,7 +16,7 @@ export type ConcreteDesignTokenAlias<
       _name: string | null;
       _path: Array<string>;
     }
-  : {} & ConcreteTokenTypeValueGuard<A, M>;
+  : {} & ConcreteDesignTokenTypeValueGuard<A, M>;
 
 type ConcreteJSONStringValue<
   S extends string = string,
@@ -111,7 +111,7 @@ type ConcreteStrokeValue<
   ? ConcreteDesignTokenAlias<A, M>
   : DesignTokenAlias;
 
-type ConcreteTokenTypeValueGuard<
+type ConcreteDesignTokenTypeValueGuard<
   A extends boolean = false,
   M extends boolean = false
 > =
@@ -243,13 +243,13 @@ export type ConcreteDesignToken<
       _kind: 'token';
       _path: Array<string>;
     }
-  : {} & ConcreteTokenTypeValueGuard<A, M>;
-type ConcreteTokenGroup<
+  : {} & ConcreteDesignTokenTypeValueGuard<A, M>;
+type ConcreteDesignTokenGroup<
   A extends boolean = false,
   M extends boolean = false
 > = {
   // Group
-  $type?: TokenType;
+  $type?: DesignTokenType;
   $description?: string;
   // $value: never
 } & M extends true
@@ -258,12 +258,12 @@ type ConcreteTokenGroup<
       _path: Array<string>;
     }
   : {};
-export type ConcreteTokenTree<
+export type ConcreteDesignTokenTree<
   A extends boolean = boolean, // ResolveAlias
   M extends boolean = boolean // PublishMetadata
 > = {
   [name: string]:
     | ConcreteDesignToken<A, M>
-    | ConcreteTokenGroup<A, M>
-    | ConcreteTokenTree<A, M>;
+    | ConcreteDesignTokenGroup<A, M>
+    | ConcreteDesignTokenTree<A, M>;
 };

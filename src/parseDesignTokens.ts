@@ -1,13 +1,13 @@
 import allLodash from 'lodash';
 
 import {
-  TokenGroup,
-  TokenTree,
-  TokenType,
+  DesignTokenGroup,
+  DesignTokenTree,
+  DesignTokenType,
   DesignToken,
-  TokenValue,
+  DesignTokenValue,
 } from './types/designTokenFormatModule.js';
-import { ConcreteTokenTree } from './types/concreteTokenTree.js';
+import { ConcreteDesignTokenTree } from './types/concreteDesignTokenTree.js';
 import { matchIsAlias } from './utils/matchIsAlias.js';
 import { validateDesignTokenValue } from './utils/validateDesignTokenValue.js';
 import { validateDesignTokenAndGroupName } from './utils/validateDesignTokenAndGroupName.js';
@@ -18,12 +18,12 @@ const { get, omitBy } = allLodash;
 export function resolveAlias(
   rawAlias: string,
   options?: ParseDesignTokensOptions,
-  context?: TokenTree
+  context?: DesignTokenTree
 ) {
   // rawAlias is like {colors.primary}
   const alias = rawAlias.slice(1, -1);
   const currentPath = alias.split('.');
-  const foundEntry = get(context, alias) as TokenTree;
+  const foundEntry = get(context, alias) as DesignTokenTree;
   if (foundEntry) {
     if (!options?.resolveAliases) {
       return rawAlias;
@@ -32,7 +32,7 @@ export function resolveAlias(
     const parentPath = alias.split('.').slice(0, -1).join('.');
     const maybeParent =
       parentPath.length > 0
-        ? (get(context, parentPath) as TokenTree)
+        ? (get(context, parentPath) as DesignTokenTree)
         : undefined;
 
     const result = parseDesignTokens(
@@ -41,7 +41,7 @@ export function resolveAlias(
       maybeParent,
       context,
       currentPath
-    ) as TokenTree;
+    ) as DesignTokenTree;
     const formatted = Object.values(result)[0];
 
     return {
@@ -66,12 +66,12 @@ export function resolveAlias(
 }
 
 function resolveObjectValue(
-  value: Omit<TokenValue, string | symbol | number>,
+  value: Omit<DesignTokenValue, string | symbol | number>,
   options?: ParseDesignTokensOptions,
-  parent?: TokenTree,
-  context?: TokenTree,
+  parent?: DesignTokenTree,
+  context?: DesignTokenTree,
   path: Array<string> = []
-): { [key: string]: TokenValue } {
+): { [key: string]: DesignTokenValue } {
   return Object.entries(value).reduce((acc, [key, value]) => {
     const currentPath = path.concat(key);
     if (matchIsAlias(value)) {
@@ -99,12 +99,12 @@ function resolveObjectValue(
 }
 
 function resolveArrayValue(
-  value: TokenValue[],
+  value: DesignTokenValue[],
   options?: ParseDesignTokensOptions,
-  parent?: TokenTree,
-  context?: TokenTree,
+  parent?: DesignTokenTree,
+  context?: DesignTokenTree,
   path: Array<string> = []
-): TokenValue[] {
+): DesignTokenValue[] {
   return value.map((item, i) => {
     const currentPath = path.concat(`[${i}]`);
     if (matchIsAlias(item)) {
@@ -131,12 +131,12 @@ export function parseDesignTokens<
   RA extends boolean = false,
   PM extends boolean = false
 >(
-  tokens: TokenTree,
+  tokens: DesignTokenTree,
   options?: ParseDesignTokensOptions<RA, PM>,
-  parent?: TokenTree,
-  context?: TokenTree,
+  parent?: DesignTokenTree,
+  context?: DesignTokenTree,
   path: Array<string> = []
-): ConcreteTokenTree<RA, PM> {
+): ConcreteDesignTokenTree<RA, PM> {
   if (!context) {
     context = tokens;
   }
@@ -146,12 +146,12 @@ export function parseDesignTokens<
     validateDesignTokenAndGroupName(name);
     const currentPath = path.concat(name);
 
-    let maybeType: TokenType | undefined;
+    let maybeType: DesignTokenType | undefined;
     if (value.$type) {
-      maybeType = value.$type as TokenType;
+      maybeType = value.$type as DesignTokenType;
     } else if (parent && parent.$type) {
       // From direct parent if exists
-      maybeType = parent.$type as TokenType;
+      maybeType = parent.$type as DesignTokenType;
     }
 
     // A Token has a $value
@@ -159,7 +159,7 @@ export function parseDesignTokens<
       const { $description, $value, $extensions } = value as DesignToken;
       const isAlias = matchIsAlias($value);
 
-      let finalValue: TokenValue = $value;
+      let finalValue: DesignTokenValue = $value;
       if (isAlias) {
         finalValue = resolveAlias($value as string, options, context);
       } else if (Array.isArray($value)) {
@@ -187,7 +187,7 @@ export function parseDesignTokens<
         '$type' in finalValue
       ) {
         if (maybeType === undefined) {
-          maybeType = finalValue.$type as TokenType;
+          maybeType = finalValue.$type as DesignTokenType;
         } else if (maybeType !== finalValue.$type) {
           throw new Error(
             `Type mismatch: ${maybeType} !== ${
@@ -220,7 +220,7 @@ export function parseDesignTokens<
       };
     } else {
       // A Group has NOT a $value
-      const { $description } = value as TokenGroup;
+      const { $description } = value as DesignTokenGroup;
       const restOfKeys = omitBy(value, (v, k) => k.startsWith('$'));
 
       const merged = Object.entries(restOfKeys)
@@ -231,15 +231,15 @@ export function parseDesignTokens<
           (acc, [k, v]) => ({
             ...acc,
             ...parseDesignTokens(
-              { [k]: v } as TokenTree,
+              { [k]: v } as DesignTokenTree,
               options,
-              value as TokenTree,
+              value as DesignTokenTree,
               context,
               currentPath
             ),
           }),
           {}
-        ) as TokenTree;
+        ) as DesignTokenTree;
       return {
         ...acc,
         [name]: {

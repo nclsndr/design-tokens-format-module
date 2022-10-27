@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 // @ts-ignore - function is non rootDir on purpose
 import { rotateParserOptions } from './_utils/rotateParserOptions.js';
 
-import { TokenTree } from '../src/types/designTokenFormatModule.js';
+import { DesignTokenTree } from '../src/types/designTokenFormatModule.js';
 import {
   ParseDesignTokensOptions,
   parseDesignTokens,
@@ -24,7 +24,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should return a nested empty object', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         aKey: {
           extraKey: {},
         },
@@ -139,7 +139,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
 
   it('Should deduce JSON type of null', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'null-token': {
           $value: null,
           $description: 'This is a null value',
@@ -165,7 +165,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should deduce JSON type of string', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'string-token': {
           $value: 'string',
           $description: 'This is a string value',
@@ -190,7 +190,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should deduce JSON type of boolean', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'boolean-token': {
           $value: true,
           $description: 'This is a boolean value',
@@ -215,7 +215,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should deduce JSON type of custom object', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'object-literal-token': {
           $value: { dope: true, array: [1, 2, 3], object: { key: 'ok' } },
           $description: 'This is a custom object value',
@@ -240,7 +240,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should deduce JSON type of custom array with alias', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'array-value-token': {
           $value: [{ dope: true }, [1, 2, 3]],
           $description: 'This is a custom array of objects value',
@@ -370,7 +370,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
 
   it('Should parse a color token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'a-color': {
           $type: 'color',
           $value: '#000000',
@@ -396,7 +396,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a dimension token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'dimension-basis': {
           $type: 'dimension',
           $value: '3px',
@@ -422,7 +422,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a string based fontFamily token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'fontFamily-basis': {
           $type: 'fontFamily',
           $value: 'Arial',
@@ -448,7 +448,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a string[] based fontFamily token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'fontFamily-basis': {
           $type: 'fontFamily',
           $value: ['Arial', 'sans-serif'],
@@ -474,7 +474,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a string based fontWeight token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'fontWeight-basis': {
           $type: 'fontWeight',
           $value: 'light',
@@ -500,7 +500,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a number based fontWeight token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'fontWeight-basis': {
           $type: 'fontWeight',
           $value: 200,
@@ -526,7 +526,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a duration token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'duration-basis': {
           $type: 'duration',
           $value: '200ms',
@@ -552,7 +552,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a cubicBezier token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'cubicBezier-basis': {
           $type: 'cubicBezier',
           $value: [0.3, 2, 0.5, 3],
@@ -578,7 +578,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a shadow token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'shadow-basis': {
           $type: 'shadow',
           $value: {
@@ -616,7 +616,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a string based strokeStyle token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'strokeStyle-basis': {
           $type: 'strokeStyle',
           $value: 'solid',
@@ -642,7 +642,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse an object based strokeStyle token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'strokeStyle-basis': {
           $type: 'strokeStyle',
           $value: {
@@ -674,7 +674,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a border token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'border-basis': {
           $type: 'border',
           $value: {
@@ -708,7 +708,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a transition token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'transition-basis': {
           $type: 'transition',
           $value: {
@@ -742,7 +742,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a gradient token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'gradient-basis': {
           $type: 'gradient',
           $value: [
@@ -780,7 +780,7 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
   });
   it('Should parse a typography token', () => {
     const times = rotateParserOptions((parserOptions) => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'typography-basis': {
           $type: 'typography',
           $value: {
@@ -1042,7 +1042,7 @@ describe.concurrent(
     };
 
     it('Should deduce JSON type of custom array with alias', () => {
-      const input: TokenTree = {
+      const input: DesignTokenTree = {
         'some-token': {
           $type: 'color',
           $value: '#000000',
