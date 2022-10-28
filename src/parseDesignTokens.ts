@@ -1,4 +1,4 @@
-import allLodash from 'lodash';
+import dlv from 'dlv';
 
 import {
   DesignTokenGroup,
@@ -13,8 +13,6 @@ import { validateDesignTokenValue } from './utils/validateDesignTokenValue.js';
 import { validateDesignTokenAndGroupName } from './utils/validateDesignTokenAndGroupName.js';
 import { inferJSONValueType } from './utils/inferJSONValueType.js';
 
-const { get, omitBy } = allLodash;
-
 export function resolveAlias(
   rawAlias: string,
   options?: ParseDesignTokensOptions,
@@ -22,8 +20,9 @@ export function resolveAlias(
 ) {
   // rawAlias is like {colors.primary}
   const alias = rawAlias.slice(1, -1);
+  const finalContext = context || {};
   const currentPath = alias.split('.');
-  const foundEntry = get(context, alias) as DesignTokenTree;
+  const foundEntry = dlv(finalContext, alias) as DesignTokenTree;
   if (foundEntry) {
     if (!options?.resolveAliases) {
       return rawAlias;
@@ -32,7 +31,7 @@ export function resolveAlias(
     const parentPath = alias.split('.').slice(0, -1).join('.');
     const maybeParent =
       parentPath.length > 0
-        ? (get(context, parentPath) as DesignTokenTree)
+        ? (dlv(finalContext, parentPath) as DesignTokenTree)
         : undefined;
 
     const result = parseDesignTokens(
@@ -221,11 +220,14 @@ export function parseDesignTokens<
     } else {
       // A Group has NOT a $value
       const { $description } = value as DesignTokenGroup;
-      const restOfKeys = omitBy(value, (v, k) => k.startsWith('$'));
 
-      const merged = Object.entries(restOfKeys)
+      const merged = Object.entries(value)
         .filter(
-          ([_, v]) => v !== null && typeof v === 'object' && !Array.isArray(v)
+          ([k, v]) =>
+            !k.startsWith('$') &&
+            v !== null &&
+            typeof v === 'object' &&
+            !Array.isArray(v)
         )
         .reduce(
           (acc, [k, v]) => ({
