@@ -61,7 +61,7 @@ export type DesignTokenGroup = {
 }
 ```
 
-### the (actual) Design Token
+### The (actual) Design Token
 
 A Design Token is recognized by the presence of a `$value` property. It can be a simple primitive value, a complex object or an alias to another token of the same type.
 
@@ -97,18 +97,21 @@ As of today (Oct 2022), the following types are supported:
 
 ```typescript
 type DesignTokenType =
+  // JSON types
   | 'string'
   | 'number'
   | 'boolean'
   | 'null'
   | 'object'
   | 'array'
+  // DTCG types
   | 'color'
   | 'dimension'
   | 'fontFamily'
   | 'fontWeight'
   | 'duration'
   | 'cubicBezier'
+  // Composite types
   | 'shadow'
   | 'strokeStyle'
   | 'border'
@@ -129,22 +132,20 @@ type DesignTokenAlias = `{${string}}`;
 
 ```json
 {
-    "color": {
-        "primary": {
-        "base": {
-            "$type": "color",
-            "$value": "#ff0000"
-        },
-        "light": {
-            "$type": "color",
-            "$value": "{color.primary.base}"
-        }
-        }
+  "color": {
+    "base": {
+      "$type": "color",
+      "$value": "#ff0000"
+    },
+    "some-other-color": {
+      "$type": "color",
+      "$value": "{color.primary.base}"
     }
+  }
 }
 ```
 
-### (Smart) `$type` resolution
+### (Smart) `$type` resolution over groups
 
 To avoid having to specify the `$type` Design Token of a given Group, the DTCG allows to define group-level `$types`.
 
@@ -162,6 +163,7 @@ To avoid having to specify the `$type` Design Token of a given Group, the DTCG a
 }
 ```
 
+`colors.primary` and `colors.secondary` will both be resolved with type `color`.
 
 ## Usage
 
@@ -176,7 +178,7 @@ $ npm install design-tokens-format-module
 The first usage of the parser is to validate a Design Token Tree against the DTCG specification.
 
 ```typescript
-import { DesignTokenTree } from "design-tokens-format-module";
+import { parseDesignTokenTree, DesignTokenTree } from "design-tokens-format-module";
 
 const tokens: DesignTokenTree = {
   "colors": {
@@ -208,7 +210,7 @@ This outputs almost the same structure:
 But where `tokens` was a `DesignTokenTree`, `parsedTokens` is now a `ConcreteDesignTokenTree`.
 
 This is a special type of `DesignTokenTree` that has been validated against the DTCG specification and defines only valid `$type<>$value` combinations.
-Hence the library provides the `ConcreteDesignTokenTypeValueGuard` type offering type safety in consumer code.
+Hence, the library provides the `ConcreteDesignTokenTypeValueGuard` type offering type safety in consumer code.
 
 ### Resolve aliases
 
@@ -256,7 +258,7 @@ const parsedTokens = parseDesignTokens(tokens, { resolveAliases: true });
 }
 ```
 
-### Additional metadata
+### Get additional metadata
 
 Along the development of this library, some metadata information, such as the path to a design token or the kind of a tree node.
 the parser takes an optional `publishMetadata` parameter that will add metadata to the concrete tree.
@@ -293,7 +295,6 @@ const parsedTokens = parseDesignTokens(input, { publishMetadata: true });
     "_path": ["a-color"]
   }
 }
-
 ```
 
 #### A full example with aliases and metadata
@@ -355,8 +356,8 @@ const parsedTokens = parseDesignTokens(tokens, { resolveAliases: true, publishMe
 The `DesignTokenTree` is the JSON Object data structure that represents the entire design tokens document.
 
 ```typescript
-type TokenTree = {
-  [name: string]: DesignToken | TokenGroup | TokenTree;
+type DesignTokenTree = {
+  [name: string]: DesignToken | DesignTokenGroup | DesignTokenTree;
 };
 ```
 
@@ -367,7 +368,7 @@ At each level of the token tree, we can have either an actual design token, a to
 In order to avoid duplication of declarations, a DesignToken can reference another DesignToken using the `$value` property and the `{token.path}` syntax.
 
 ```typescript
-type Alias = `{${string}}` // e.g. {colors.primary}
+type DesignTokenAlias = `{${string}}` // e.g. {colors.primary}
 ```
 
 ### Token types
@@ -390,7 +391,7 @@ type JSONTokenType = 'string' | 'number' | 'boolean' | 'null' | 'array' | 'objec
 type name: `'color'`
 
 ```typescript
-type ColorValue = `#${string}` | Alias
+type ColorValue = `#${string}` | DesignTokenAlias
 ```
 
 #### Dimension
@@ -398,7 +399,7 @@ type ColorValue = `#${string}` | Alias
 type name: `'dimension'`
 
 ```typescript
-type DimensionValue = string | Alias; // 1px | 1rem
+type DimensionValue = `${number}px` | `${number}rem` | DesignTokenAlias; // 1px | 1rem
 ```
 
 #### Font Family
@@ -406,7 +407,7 @@ type DimensionValue = string | Alias; // 1px | 1rem
 type name: `'fontFamily'`
 
 ```typescript
-type FontFamilyValue = string | string[] | Alias; // "Helvetica" | ["Helvetica", "Arial", sans-serif]
+type FontFamilyValue = string | string[] | DesignTokenAlias; // "Helvetica" | ["Helvetica", "Arial", sans-serif]
 ```
 
 #### Font Weight
@@ -417,7 +418,7 @@ type name: `'fontWeight'`
 type FontWeightValue =
   | number // [1-1000]
   | FontWeightNomenclature[keyof FontWeightNomenclature]['value'] // 'thin' | 'hairline' | 'extra-light' | 'ultra-light' | 'light' | 'normal' | 'regular' | 'book' | 'medium' | 'semi-bold' | 'demi-bold' | 'bold' | 'extra-bold' | 'ultra-bold' | 'black' | 'heavy' | 'extra-black' | 'ultra-black'
-  | Alias;
+  | DesignTokenAlias;
 ```
 
 #### Duration
@@ -425,7 +426,7 @@ type FontWeightValue =
 type name: `'duration'`
 
 ```typescript
-type DurationValue = `${number}ms` | Alias; // 100ms
+type DurationValue = `${number}ms` | DesignTokenAlias; // 100ms
 ```
 
 #### Cubic Bezier
@@ -435,7 +436,7 @@ type name: `'cubicBezier'`
 ```typescript
 type CubicBezierValue =
   | [P1x: number, P1y: number, P2x: number, P2y: number]
-  | Alias;
+  | DesignTokenAlias;
 ```
 
 #### Shadow
@@ -451,7 +452,7 @@ type ShadowValue =
   blur: DimensionValue;
   spread: DimensionValue;
 }
-  | Alias;
+  | DesignTokenAlias;
 ```
 
 #### Stroke Style
@@ -472,7 +473,7 @@ type StrokeStyleValue =
   dashArray: DimensionValue[];
   lineCap: 'round' | 'butt' | 'square';
 }
-  | Alias;
+  | DesignTokenAlias;
 ```
 
 #### Border
@@ -486,7 +487,7 @@ type BorderValue =
   width: DimensionValue;
   style: StrokeStyleValue;
 }
-  | Alias;
+  | DesignTokenAlias;
 ```
 
 #### Transition
@@ -500,7 +501,7 @@ type TransitionValue =
   delay: DurationValue;
   timingFunction: CubicBezierValue;
 }
-  | Alias;
+  | DesignTokenAlias;
 ```
 
 #### Gradient
@@ -513,7 +514,7 @@ type GradientValue =
   color: ColorValue;
   position: JSONNumberValue;
 }>
-  | Alias;
+  | DesignTokenAlias;
 ```
 
 #### Typography
@@ -529,33 +530,69 @@ type TypographyValue =
   letterSpacing: DimensionValue;
   lineHeight: JSONStringValue;
 }
-  | Alias;
+  | DesignTokenAlias;
 ```
 
 ### Utility functions
 
 #### parseDesignTokens
 
-```
-parseDesignTokens(input: TokenTree): ConcreteTokenTree
+```typescript
+declare function parseDesignTokens<A extends boolean, M extends boolean>(
+  input: TokenTree,
+  parserOptions: {
+    publishMetadata?: M; // defaults to false
+    resolveAliases?: A;  // defaults to false
+  }
+): ConcreteTokenTree<A, M>;
 ```
 
 The function handles :
 - Validation of the input against the Design Token spec
-- Resolution of aliases
 - Resolution of the `$type` field for any token
-- Population of `_` prefixed metadata
+- Optional resolution of aliases
+- Optional population of `_` prefixed metadata
 
 > ⚠️ Limitation: The detection of circular aliasing does not work without `parserOptions.resolveAliases` set to `true`.
 
-
 #### validateDesignTokenValue
+
+While constructing a Design Token Tree, you may need to validate token values individually. The library provides a `validateDesignTokenValue` based on the [zod](https://github.com/colinhacks/zod) validation library.
+
+````typescript
+declare function validateDesignTokenValue(
+  tokenType: DesignTokenType,
+  tokenValue: DesignTokenValue
+): any
+````
+
+_Note: return type must be improved_
+
 
 #### validateDesignTokenAndGroupName
 
+Since token names and group names are meant to be used in `{dot.path}` notation, we need to ensure they avoid the 3 characters: `.`, `{`, `}`.
+
+```typescript
+declare function validateDesignTokenAndGroupName(name: string): string
+```
+
+#### matchIsDesignTokenAlias
+
+Used to deduce if a given string is an alias following the `{dot.path}` notation.
+
+```typescript
+declare function matchIsDesignTokenAlias(value: any): boolean
+```
+
 ### Types
 
+
 #### JSONTypeName
+
+```typescript
+type JSONTypeName = 'string' | 'number' | 'boolean' | 'null' | 'array' | 'object'
+```
 
 
 ## Roadmap
