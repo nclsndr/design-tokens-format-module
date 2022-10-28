@@ -67,7 +67,7 @@ type ConcreteColorValue<
 type ConcreteDimensionValue<
   A extends boolean = false,
   M extends boolean = false
-> = ConcreteJSONStringValue<string, A, M>;
+> = ConcreteJSONStringValue<`${number}px` | `${number}rem`, A, M>;
 type ConcreteFontFamilyValue<
   A extends boolean = false,
   M extends boolean = false

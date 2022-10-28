@@ -15,7 +15,7 @@ According to the DTCG, Design Tokens are described using a JSON object made of a
 
 While `tokens` are responsible to carry the actual value (`$value`), we also distinguish `aliases` that help reference another token within the same JSON object using the `{dot.path}` notation.
 
-> The DTCG does not give a name (yet?) to this very JSON object. For the sake of clarity, the library refers to it as `DesignTokenTree`.
+> The DTCG does not give a name (yet?) to this very JSON object. For the sake of clarity, this library refers to it as `DesignTokenTree`.
 
 ### The Design Token Tree
 
@@ -398,7 +398,7 @@ type ColorValue = `#${string}` | Alias
 type name: `'dimension'`
 
 ```typescript
-type DimensionValue = string | Alias; // 1px | 1rem | 1vh ...
+type DimensionValue = string | Alias; // 1px | 1rem
 ```
 
 #### Font Family

@@ -81,7 +81,11 @@ const JSONObjectSchema = z.record(JSONSchema);
 
 // Primitive token value types
 const colorValueSchema = z.union([z.string().startsWith('#'), aliasSchema]);
-const dimensionValueSchema = z.union([z.string(), aliasSchema]);
+const dimensionValueSchema = z.union([
+  z.string().endsWith('px'),
+  z.string().endsWith('rem'),
+  aliasSchema,
+]);
 const fontFamilyValueSchema = z.union([
   z.string(),
   z.array(z.string()),

@@ -38,8 +38,13 @@ describe('validateTokenValue', () => {
     const parsed = validateDesignTokenValue('color', value);
     expect(parsed).toBe(value);
   });
-  it('Should validate a dimension type', () => {
+  it('Should validate a dimension type in px', () => {
     const value = '4px';
+    const parsed = validateDesignTokenValue('dimension', value);
+    expect(parsed).toBe(value);
+  });
+  it('Should validate a dimension type in rem', () => {
+    const value = '4rem';
     const parsed = validateDesignTokenValue('dimension', value);
     expect(parsed).toBe(value);
   });

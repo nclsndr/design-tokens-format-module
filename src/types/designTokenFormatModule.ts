@@ -61,7 +61,7 @@ export type JSONTokenValue =
 
 // Primitive token value types
 type ColorValue = `#${string}` | DesignTokenAlias; // #ff00ff (opaque) | #00000088 (transparent)
-type DimensionValue = string | DesignTokenAlias; // 1px | 1rem | 1em | 1% | 1vh | 1vw | 1vmin | 1vmax
+type DimensionValue = `${number}px` | `${number}rem` | DesignTokenAlias; // 1px | 1rem
 type FontFamilyValue = string | string[] | DesignTokenAlias; // "Helvetica" | ["Helvetica", "Arial", sans-serif]
 type FontWeightValue =
   | number // [1-1000]
