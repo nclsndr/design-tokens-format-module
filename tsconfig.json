@@ -13,6 +13,7 @@
   "exclude": [
     "./dist",
     "vite.config.ts",
-    "./**/*.spec.ts"
+    "./**/*.spec.ts",
+    "./tests"
   ]
 }
