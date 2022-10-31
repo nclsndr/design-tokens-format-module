@@ -178,7 +178,7 @@ $ npm install design-tokens-format-module
 The first usage of the parser is to validate a Design Token Tree against the DTCG specification.
 
 ```typescript
-import { parseDesignTokenTree, DesignTokenTree } from "design-tokens-format-module";
+import { parseDesignTokens, DesignTokenTree } from "design-tokens-format-module";
 
 const tokens: DesignTokenTree = {
   "colors": {
@@ -189,7 +189,7 @@ const tokens: DesignTokenTree = {
   }
 };
 
-const parsedTokens = parseDesignTokenTree(tokens);
+const parsedTokens = parseDesignTokens(tokens);
 ```
 
 This outputs almost the same structure: 
@@ -209,8 +209,7 @@ This outputs almost the same structure:
 
 But where `tokens` was a `DesignTokenTree`, `parsedTokens` is now a `ConcreteDesignTokenTree`.
 
-This is a special type of `DesignTokenTree` that has been validated against the DTCG specification and defines only valid `$type<>$value` combinations.
-Hence, the library provides the `ConcreteDesignTokenTypeValueGuard` type offering type safety in consumer code.
+The library provides a `ConcreteDesignTokenTypeValueGuard` type offering type safety in consumer code. This is a special type of `DesignTokenTree` that has been validated against the DTCG specification and defines only valid `$type<>$value` combinations.
 
 ### Resolve aliases
 
@@ -365,7 +364,7 @@ At each level of the token tree, we can have either an actual design token, a to
 
 #### Aliasing
 
-In order to avoid duplication of declarations, a DesignToken can reference another DesignToken using the `$value` property and the `{token.path}` syntax.
+In order to avoid duplication of declarations, a `DesignToken` can reference another `DesignToken` using the `$value` property and the `{token.path}` syntax.
 
 ```typescript
 type DesignTokenAlias = `{${string}}` // e.g. {colors.primary}
