@@ -1,0 +1,12 @@
+export const colorTypeName = 'color';
+export const dimensionTypeName = 'dimension';
+export const fontFamilyTypeName = 'fontFamily';
+export const fontWeightTypeName = 'fontWeight';
+export const durationTypeName = 'duration';
+export const cubicBezierTypeName = 'cubicBezier';
+export const shadowTypeName = 'shadow';
+export const strokeStyleTypeName = 'strokeStyle';
+export const borderTypeName = 'border';
+export const transitionTypeName = 'transition';
+export const gradientTypeName = 'gradient';
+export const typographyTypeName = 'typography';

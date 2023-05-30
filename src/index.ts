@@ -1,4 +1,4 @@
-import { matchIsAlias } from './utils/matchIsAlias.js';
+import { matchIsAlias } from './definitions/internals/alias.js';
 
 export { parseDesignTokens } from './parseDesignTokens.js';
 export { validateDesignTokenValue } from './utils/validateDesignTokenValue.js';

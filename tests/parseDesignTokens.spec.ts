@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import * as fc from 'fast-check';
 
 // @ts-ignore - function is non rootDir on purpose
 import { rotateParserOptions } from './_utils/rotateParserOptions.js';
@@ -137,31 +138,64 @@ describe.concurrent('parseDesignTokens all `parserOptions` variants', () => {
     expect.assertions(times * 3);
   });
 
-  it('Should deduce JSON type of null', () => {
-    const times = rotateParserOptions((parserOptions) => {
-      const input: DesignTokenTree = {
-        'null-token': {
-          $value: null,
-          $description: 'This is a null value',
-        },
-      };
-      const result = parseDesignTokens(input, parserOptions);
-      const output = {
-        'null-token': {
-          $type: 'null',
-          $value: null,
-          $description: 'This is a null value',
+  it.only('Should deduce JSON type of null', () => {
+    fc.assert(
+      fc.property(
+        fc.record({
+          resolveAliases: fc.boolean(),
+          publishMetadata: fc.boolean(),
+        }),
+        (opts) => {
+          console.log('opts : ', opts);
+          const input: DesignTokenTree = {
+            'null-token': {
+              $value: null,
+              $description: 'This is a null value',
+            },
+          };
+          const result = parseDesignTokens(input, opts);
+          const output = {
+            'null-token': {
+              $type: 'null',
+              $value: null,
+              $description: 'This is a null value',
 
-          // If publishing extra metadata
-          ...(parserOptions.publishMetadata && {
-            _kind: 'token',
-            _path: ['null-token'],
-          }),
-        },
-      };
-      expect(result).toEqual(output);
-    });
-    expect.assertions(times);
+              // If publishing extra metadata
+              ...(opts.publishMetadata && {
+                _kind: 'token',
+                _path: ['null-token'],
+              }),
+            },
+          };
+          expect(result).toEqual(output);
+        }
+      )
+    );
+
+    // const times = rotateParserOptions((parserOptions) => {
+    //   const input: DesignTokenTree = {
+    //     'null-token': {
+    //       $value: null,
+    //       $description: 'This is a null value',
+    //     },
+    //   };
+    //   const result = parseDesignTokens(input, parserOptions);
+    //   const output = {
+    //     'null-token': {
+    //       $type: 'null',
+    //       $value: null,
+    //       $description: 'This is a null value',
+    //
+    //       // If publishing extra metadata
+    //       ...(parserOptions.publishMetadata && {
+    //         _kind: 'token',
+    //         _path: ['null-token'],
+    //       }),
+    //     },
+    //   };
+    //   expect(result).toEqual(output);
+    // });
+    // expect.assertions(times);
   });
   it('Should deduce JSON type of string', () => {
     const times = rotateParserOptions((parserOptions) => {

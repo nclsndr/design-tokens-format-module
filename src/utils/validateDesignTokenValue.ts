@@ -2,19 +2,21 @@ import {
   DesignTokenType,
   DesignTokenValue,
 } from '../types/designTokenFormatModule.js';
-import { matchIsAlias } from './matchIsAlias.js';
 import {
-  aliasSchema,
+  aliasSignatureSchema,
+  matchIsAlias,
+} from '../definitions/internals/alias.js';
+import {
   tokenTypeAndValueSchemasMap,
   tokenTypeSchema,
-} from './schemas.js';
+} from './schemas_legacy.js';
 
 export function validateDesignTokenValue(
   tokenType: DesignTokenType,
   tokenValue: DesignTokenValue
 ) {
   if (matchIsAlias(tokenValue)) {
-    return aliasSchema.parse(tokenValue);
+    return aliasSignatureSchema.parse(tokenValue);
   }
   const validatedTokenType = tokenTypeSchema.parse(tokenType);
   const validator = tokenTypeAndValueSchemasMap[validatedTokenType];

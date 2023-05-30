@@ -8,10 +8,10 @@ import {
   DesignTokenValue,
 } from './types/designTokenFormatModule.js';
 import { ConcreteDesignTokenTree } from './types/concreteDesignTokenTree.js';
-import { matchIsAlias } from './utils/matchIsAlias.js';
 import { validateDesignTokenValue } from './utils/validateDesignTokenValue.js';
 import { validateDesignTokenAndGroupName } from './utils/validateDesignTokenAndGroupName.js';
 import { inferJSONValueType } from './utils/inferJSONValueType.js';
+import { matchIsAlias } from './definitions/internals/alias.js';
 
 export function resolveAlias(
   rawAlias: string,
