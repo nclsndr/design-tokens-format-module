@@ -1,7 +1,13 @@
 node_modules
+.yarn
+.pnp.cjs
+.pnp.loader.mjs
+
 .idea
 .vscode
+
 .env.*
 .npmrc
+
 dist
 coverage

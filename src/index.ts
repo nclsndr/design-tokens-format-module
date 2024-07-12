@@ -7,3 +7,5 @@ export { validateDesignTokenAndGroupName } from './utils/validateDesignTokenAndG
 export const matchIsDesignTokenAlias = matchIsAlias;
 
 export * from './types/index.js';
+
+export * from './utils/JSONDefinitions.js';

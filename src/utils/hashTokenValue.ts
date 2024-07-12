@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-import { JSONValue } from '../types/JSON.js';
+import { JSONValue } from './JSONDefinitions.js';
 
 export function hashTokenValue(...values: Array<JSONValue>) {
   const shasum = createHash('sha1');

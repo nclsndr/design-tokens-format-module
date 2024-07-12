@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { JSONTypeNameSchema, tokenTypeSchema } from '../utils/schemas.js';
-import { JSONValue } from './JSON.js';
+import { JSONValue } from '../utils/JSONDefinitions.js';
 
 export type JSONTypeName = z.infer<typeof JSONTypeNameSchema>;
 export type DesignTokenType = z.infer<typeof tokenTypeSchema>;
