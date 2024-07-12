@@ -3,17 +3,22 @@
     "strict": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "node16",
-    "moduleResolution": "node16",
     "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "noImplicitOverride": true,
+
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+
+    "lib": ["es2022"],
+
     "rootDir": "./src",
-    "outDir": "./dist",
-    "declaration": true
+    "outDir": "./dist"
   },
-  "exclude": [
-    "./dist",
-    "vite.config.ts",
-    "./**/*.spec.ts",
-    "./tests"
-  ]
+  "include": ["./src"],
+  "exclude": ["./dist", "vite.config.ts", "./tests", "./**/*.spec.ts"]
 }

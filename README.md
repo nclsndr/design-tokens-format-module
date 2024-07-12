@@ -2,609 +2,241 @@
 
 *— A Typescript implementation of the [Design Tokens Format Module](https://design-tokens.github.io/community-group/format/) specification along with some utility functions*
 
-### Abstract
+> ⚠️ Please note, the DTCG specification is NOT stable yet, breaking changes might occur in the future.
 
-This repository aims to provide comprehensive tooling to work with the Design Tokens Format Module specification when it comes to parse, validate, resolve aliasing and (maybe) manage design token files.
+## Installation
 
-> ⚠️ Please note, neither the DTCG specification nor this library are stable yet.
-> The DTCG specification is currently under draft phase and the library might integrate unstable APIs for the sake of research.
-
-## Introducing Design Tokens
-
-According to the DTCG, Design Tokens are described using a JSON object made of arbitrary nested `groups`, organizing `tokens`.
-
-While `tokens` are responsible to carry the actual value (`$value`), we also distinguish `aliases` that help reference another token within the same JSON object using the `{dot.path}` notation.
-
-> The DTCG does not give a name (yet?) to this very JSON object. For the sake of clarity, this library refers to it as `DesignTokenTree`.
-
-### The Design Token Tree
-
-At the top level definition we encounter the `DesignTokenTree`. A simple recursive structure allowing deep group nesting where Design Tokens can be defined.
-
-```typescript
-type DesignTokenTree = {
-  [name: string]: DesignToken | DesignTokenGroup | DesignTokenTree;
-};
-```
-
-```json
-{
-  "colors": {
-    "primary": {
-      "$type": "color",
-      "$value": "#ff0000"
-    }
-  }
-}
-```
-
-### The Design Token Group
-
-A `DesignTokenGroup` is a simple object that can be used to group Design Tokens together. It is used to provide an arbitrary semantic meaning to a set of Design Tokens.
-
-It can also define a `$type` property, which will be inherited by all Design Tokens within the group.
-
-```typescript
-export type DesignTokenGroup = {
-  $type?: DesignTokenType;
-  $description?: string;
-};
-```
-
-```json
-{
-  "some": {
-    "nested": {
-      "groups": {}
-    }
-  }
-}
-```
-
-### The (actual) Design Token
-
-A Design Token is recognized by the presence of a `$value` property. It can be a simple primitive value, a complex object or an alias to another token of the same type.
-
-The type must be specified most of the time, but the library will try to infer against `JSONTypeName` from the value if not specified.
-
-```typescript
-export type DesignToken = {
-  $value: DesignTokenValue;
-  $type?: DesignTokenType;
-  $description?: string;
-  $extensions?: JSONValue;
-};
-```
-
-```json
-{
-  "border-default": {
-    "$type": "border",
-    "$value": {
-      "width": "1px",
-      "style": "solid",
-      "color": "#000000"
-    }
-  }
-}
-```
-
-#### Design Token types
-
-The DTCG specification defines a set of Design Token types that can be used to describe the value of a Design Token. The library provides a set of constants to use as `$type` value.
-
-As of today (Oct 2022), the following types are supported:
-
-```typescript
-type DesignTokenType =
-  // JSON types
-  | 'string'
-  | 'number'
-  | 'boolean'
-  | 'null'
-  | 'object'
-  | 'array'
-  // DTCG types
-  | 'color'
-  | 'dimension'
-  | 'fontFamily'
-  | 'fontWeight'
-  | 'duration'
-  | 'cubicBezier'
-  // Composite types
-  | 'shadow'
-  | 'strokeStyle'
-  | 'border'
-  | 'transition'
-  | 'gradient'
-  | 'typography'
-```
-
-_More details in the API section down below 👇_
-
-### Design Token Alias
-
-The `DesignTokenAlias` is a special type of Design Token that references another token within the same Design Token Tree using the `{dot.path}` notation.
-
-```typescript
-type DesignTokenAlias = `{${string}}`;
-```
-
-```json
-{
-  "color": {
-    "base": {
-      "$type": "color",
-      "$value": "#ff0000"
-    },
-    "some-other-color": {
-      "$type": "color",
-      "$value": "{color.primary.base}"
-    }
-  }
-}
-```
-
-### (Smart) `$type` resolution over groups
-
-To avoid having to specify the `$type` Design Token of a given Group, the DTCG allows to define group-level `$types`.
-
-```json
-{
-  "colors": {
-    "$type": "color",
-    "primary": {
-      "$value": "#ff0000"
-    },
-    "secondary": {
-      "$value": "#00ff00"
-    }
-  }
-}
-```
-
-`colors.primary` and `colors.secondary` will both be resolved with type `color`.
-
-## Usage
-
-### Installation
+### Using npm
 
 ```bash
 $ npm install design-tokens-format-module
 ```
 
-### Validate a Design Token Tree
+### Using yarn
 
-The first usage of the parser is to validate a Design Token Tree against the DTCG specification.
-
-```typescript
-import { parseDesignTokens, DesignTokenTree } from "design-tokens-format-module";
-
-const tokens: DesignTokenTree = {
-  "colors": {
-    "$type": "color",
-    "primary": {
-      "$value": "#ff0000"
-    }
-  }
-};
-
-const parsedTokens = parseDesignTokens(tokens);
+```bash
+$ yarn add design-tokens-format-module
 ```
 
-This outputs almost the same structure: 
-    
-```json5
-// parsedTokens =
-{
-  "colors": {
-    "$type": "color",
-    "primary": {
-      "$type": "color", // <-- Resolved from the group-level $type
-      "$value": "#ff0000"
-    }
-  }
-}
+### Using pnpm
+
+```bash
+$ pnpm add design-tokens-format-module
 ```
 
-But where `tokens` was a `DesignTokenTree`, `parsedTokens` is now a `ConcreteDesignTokenTree`.
+## Usage
 
-The library provides a `ConcreteDesignTokenTypeValueGuard` type offering type safety in consumer code. This is a special type of `DesignTokenTree` that has been validated against the DTCG specification and defines only valid `$type<>$value` combinations.
+This module provides all the type definitions and the most basic helpers required to work with a JSON design token tree.
 
-### Resolve aliases
+### Token tree
 
-In order to fully validate the tree and make it ready for further serialization operations, the parser takes an optional `resolveAliases` parameter that will resolve all aliases in the tree.
+Constrain a JSON object that represents a design token tree.
 
 ```typescript
-import { parseDesignTokens, DesignTokenTree } from "design-tokens-format-module";
+import { JSONTokenTree } from 'design-tokens-format-module';
 
-const tokens: DesignTokenTree = {
-  colors: {
-    $type: 'color',
+const tokenTree = {
+  color: {
     primary: {
+      $type: 'color',
       $value: '#000000',
-      $description: 'This is a primary color',
-    },
-    secondary: {
-      $value: '{colors.primary}',
     },
   },
-};
-const parsedTokens = parseDesignTokens(tokens, { resolveAliases: true });
-```
-
-`parsedTokens.colors.secondary` now holds the content of its alias.
-
-```json5
-// parsedTokens =
-{
-  "colors": {
-    "$type": "color",
-    "primary": {
-      "$type": "color",
-      "$value": "#000000",
-      "$description": "This is a primary color"
+  spacing: {
+    small: {
+      $type: 'dimension',
+      $value: '8px',
     },
-    "secondary": {
-      "$type": "color",
-      "$value": {
-        "$type": "color",
-        "$value": "#000000",
-        "$description": "This is a primary color"
-      }
-    }
-  }
-}
+  },
+} satisfies JSONTokenTree;
 ```
 
-### Get additional metadata
+### Design Token
 
-Along the development of this library, some metadata information, such as the path to a design token or the kind of a tree node.
-the parser takes an optional `publishMetadata` parameter that will add metadata to the concrete tree.
-
-Additions are:
-- `_kind` property on each node (`'group' | 'token' | 'alias'`)
-- `_path` property on each node (`Array<string>`)
-- `_name` property on `ConcreteDesignTokenAlias` only to reference the original name of the alias
-
+Each design token type is available as a TypeScript namespace.
 
 ```typescript
-import { parseDesignTokens, DesignTokenTree } from "design-tokens-format-module";
+import {
+  Color // Dimension, FontFamily... 
+} from 'design-tokens-format-module';
 
-const input: DesignTokenTree = {
-  'a-color': {
-    $type: 'color',
-    $value: '#000000',
-    $description: 'This is a color',
-  },
-};
-const parsedTokens = parseDesignTokens(input, { publishMetadata: true });
+declare function parseColorToken(token: unknown): Color.Token;
+declare function parseColorValue(tokens: unknown): Color.Value;
+declare function matchIsColorTokenTypeName(
+  name: string,
+): name is Color.TypeName;
 ```
 
-`parsedTokens` has now `_` prefixed properties.
+#### Design token type names
 
-```json5
-// parsedTokens =
-{
-  "a-color": {
-    "$type": "color",
-    "$value": "#000000",
-    "$description": "This is a color",
-    "_kind": "token",
-    "_path": ["a-color"]
-  }
-}
-```
-
-#### A full example with aliases and metadata
+All token type names are available as a constant.
 
 ```typescript
-import { parseDesignTokens, DesignTokenTree } from "design-tokens-format-module";
+import { tokenTypeNames } from 'design-tokens-format-module';
 
-const tokens: DesignTokenTree = {
-  colors: {
-    $type: 'color',
-    primary: {
-      $value: '#000000',
-      $description: 'This is a primary color',
-    },
-    secondary: {
-      $value: '{colors.primary}',
-    },
-  },
-};
-const parsedTokens = parseDesignTokens(tokens, { resolveAliases: true, publishMetadata: true });
+for(const tokenTypeName of tokenTypeNames) {
+  // color, dimension...
+}
 ```
 
-```json5
-// parsedTokens =
-{
-  "colors": {
-    "$type": "color",
-    "_kind": "group",
-    "_path": ["colors"],
-    "primary": {
-      "$type": "color",
-      "$value": "#000000",
-      "$description": "This is a primary color",
-      "_kind": "token",
-      "_path": ["colors", "primary"]
-    },
-    "secondary": {
-      "$type": "color",
-      "$value": {
-        "$type": "color",
-        "$value": "#000000",
-        "$description": "This is a primary color",
-        "_kind": "alias",
-        "_path": ["colors", "primary"],
-        "_name": "primary" // <-- The original name of the alias
-      },
-      "_kind": "token",
-      "_path": ["colors", "secondary"]
+### All token types
+
+All token type signatures are available within a type union.
+
+```typescript
+import { DesignToken } from 'design-tokens-format-module';
+
+declare function parseDesignToken(token: unknown): DesignToken;
+```
+
+### Matchers
+
+JSON values can be evaluated against the token signature
+
+```typescript
+import { matchIsToken, matchIsTokenTypeName, matchIsAliasValue } from 'design-tokens-format-module';
+
+function validateToken(token: unknown) {
+  if (matchIsToken(token)) {
+    const isValidType = matchIsTokenTypeName(token.$type ?? '');
+    if(matchIsAliasValue(token.$value)) {
+      // ...
     }
   }
+  // ...
 }
+```
+
+### Enum-like constants
+
+Some token types have a fixed set of values. These are available as constants.
+
+```typescript
+import { fontWeightValues, strokeStyleStringValues, strokeStyleLineCapValues } from 'design-tokens-format-module';
 ```
 
 ## API
 
+### `AliasValue` (type)
 
-### Token tree
-
-The `DesignTokenTree` is the JSON Object data structure that represents the entire design tokens document.
-
-```typescript
-type DesignTokenTree = {
-  [name: string]: DesignToken | DesignTokenGroup | DesignTokenTree;
-};
+```ts
+type AliasValue = `{${string}}`;
 ```
 
-At each level of the token tree, we can have either an actual design token, a token group or yet another token tree, recursively.
+### `JSON` (namespace)
 
-#### Aliasing
-
-In order to avoid duplication of declarations, a `DesignToken` can reference another `DesignToken` using the `$value` property and the `{token.path}` syntax.
-
-```typescript
-type DesignTokenAlias = `{${string}}` // e.g. {colors.primary}
-```
-
-### Token types
-
-We distinguish 3 categories of design tokens:
-- JSON values (string, number, boolean, ...)
-- Primitive Design Tokens (color, duration, ...)
-- Composite Design Tokens (border, shadow, ...)
-
-#### JSON types
-
-They are the only types we might infer if not provided explicitly in the given `TokenTree`.
-
-```typescript
-type JSONTokenType = 'string' | 'number' | 'boolean' | 'null' | 'array' | 'object'
-```
-
-#### Color
-
-type name: `'color'`
-
-```typescript
-type ColorValue = `#${string}` | DesignTokenAlias
-```
-
-#### Dimension
-
-type name: `'dimension'`
-
-```typescript
-type DimensionValue = `${number}px` | `${number}rem` | DesignTokenAlias; // 1px | 1rem
-```
-
-#### Font Family
-
-type name: `'fontFamily'`
-
-```typescript
-type FontFamilyValue = string | string[] | DesignTokenAlias; // "Helvetica" | ["Helvetica", "Arial", sans-serif]
-```
-
-#### Font Weight
-
-type name: `'fontWeight'`
-
-```typescript
-type FontWeightValue =
-  | number // [1-1000]
-  | FontWeightNomenclature[keyof FontWeightNomenclature]['value'] // 'thin' | 'hairline' | 'extra-light' | 'ultra-light' | 'light' | 'normal' | 'regular' | 'book' | 'medium' | 'semi-bold' | 'demi-bold' | 'bold' | 'extra-bold' | 'ultra-bold' | 'black' | 'heavy' | 'extra-black' | 'ultra-black'
-  | DesignTokenAlias;
-```
-
-#### Duration
-
-type name: `'duration'`
-
-```typescript
-type DurationValue = `${number}ms` | DesignTokenAlias; // 100ms
-```
-
-#### Cubic Bezier
-
-type name: `'cubicBezier'`
-
-```typescript
-type CubicBezierValue =
-  | [P1x: number, P1y: number, P2x: number, P2y: number]
-  | DesignTokenAlias;
-```
-
-#### Shadow
-
-type name: `'shadow'`
-
-```typescript
-type ShadowValue =
-  | {
-  color: ColorValue;
-  offsetX: DimensionValue;
-  offsetY: DimensionValue;
-  blur: DimensionValue;
-  spread: DimensionValue;
+```ts
+namespace JSON {
+  export type Value = JSONValue;
+  export type Object = JSONObject;
+  export type Array = JSONArray;
+  export type Primitive = string | number | boolean | null;
 }
-  | DesignTokenAlias;
+```
+### JSONTokenTree (type)
+
+```ts
+type JSONTokenTree = {
+  [key: string]: DesignToken | JSONTokenTree | GroupProperties;
+} & GroupProperties;
 ```
 
-#### Stroke Style
+### `Color`,`Dimension`, ... (namespace)
 
-type name: `'strokeStyle'`
-
-```typescript
-type StrokeStyleValue =
-  | 'solid'
-  | 'dashed'
-  | 'dotted'
-  | 'double'
-  | 'groove'
-  | 'ridge'
-  | 'outset'
-  | 'inset'
-  | {
-  dashArray: DimensionValue[];
-  lineCap: 'round' | 'butt' | 'square';
+```ts
+namespace TokenTypeName {
+  export type TypeName = TypeName;
+  export type Value = Value;
+  export type Token = Token;
 }
-  | DesignTokenAlias;
 ```
 
-#### Border
+### `DesignToken` (type)
 
-type name: `'border'`
-
-```typescript
-type BorderValue =
-  | {
-  color: ColorValue;
-  width: DimensionValue;
-  style: StrokeStyleValue;
-}
-  | DesignTokenAlias;
+```ts
+type DesignToken =
+  | ColorToken
+  | DimensionToken
+  // | ...
 ```
 
-#### Transition
+### `TokenTypeName` (type)
 
-type name: `'transition'`
-
-```typescript
-type TransitionValue =
-  | {
-  duration: DurationValue;
-  delay: DurationValue;
-  timingFunction: CubicBezierValue;
-}
-  | DesignTokenAlias;
+```ts
+type TokenTypeName = 
+  | 'color'
+  | 'dimension'
+  // | ... 
 ```
 
-#### Gradient
+### `matchIsAliasValue` (function)
 
-type name: `'gradient'`
-
-```typescript
-type GradientValue =
-  | Array<{
-  color: ColorValue;
-  position: JSONNumberValue;
-}>
-  | DesignTokenAlias;
+```ts
+declare function matchIsAliasValue(candidate: unknown): candidate is AliasValue;
 ```
 
-#### Typography
+### `matchIsGroup` (function)
 
-type name: `'typography'`
-
-```typescript
-type TypographyValue =
-  | {
-  fontFamily: FontFamilyValue;
-  fontSize: DimensionValue;
-  fontWeight: FontWeightValue;
-  letterSpacing: DimensionValue;
-  lineHeight: JSONStringValue;
-}
-  | DesignTokenAlias;
+```ts
+declare function matchIsGroup(candidate: unknown): candidate is JSONTokenTree;
 ```
 
-### Utility functions
+### `matchIsToken` (function)
 
-#### parseDesignTokens
-
-```typescript
-declare function parseDesignTokens<A extends boolean, M extends boolean>(
-  input: TokenTree,
-  parserOptions: {
-    publishMetadata?: M; // defaults to false
-    resolveAliases?: A;  // defaults to false
-  }
-): ConcreteTokenTree<A, M>;
+```ts
+declare function matchIsToken(candidate: unknown): candidate is DesignToken;
 ```
 
-The function handles :
-- Validation of the input against the Design Token spec
-- Resolution of the `$type` field for any token
-- Optional resolution of aliases
-- Optional population of `_` prefixed metadata
+### `matchIsTokenTypeName` (function)
 
-> ⚠️ Limitation: The detection of circular aliasing does not work without `parserOptions.resolveAliases` set to `true`.
-
-#### validateDesignTokenValue
-
-While constructing a Design Token Tree, you may need to validate token values individually. The library provides a `validateDesignTokenValue` based on the [zod](https://github.com/colinhacks/zod) validation library.
-
-````typescript
-declare function validateDesignTokenValue(
-  tokenType: DesignTokenType,
-  tokenValue: DesignTokenValue
-): any
-````
-
-_Note: return type must be improved_
-
-
-#### validateDesignTokenAndGroupName
-
-Since token names and group names are meant to be used in `{dot.path}` notation, we need to ensure they avoid the 3 characters: `.`, `{`, `}`.
-
-```typescript
-declare function validateDesignTokenAndGroupName(name: string): string
-```
-
-#### matchIsDesignTokenAlias
-
-Used to deduce if a given string is an alias following the `{dot.path}` notation.
-
-```typescript
-declare function matchIsDesignTokenAlias(value: any): boolean
-```
-
-### Types
-
-
-#### JSONTypeName
-
-```typescript
-type JSONTypeName = 'string' | 'number' | 'boolean' | 'null' | 'array' | 'object'
+```ts
+declare function matchIsTokenTypeName(candidate: unknown): candidate is TokenTypeName;
 ```
 
 
-## Roadmap
+### `ALIAS_PATH_SEPARATOR` (constant)
 
-- [x] Implement the latest specification Typescript type definition
-- [x] Add a parse function to traverse any given token tree
-- [x] Resolve aliases
-- [x] Add validation logic for all known token types
-- [ ] Expose validation only API
-- [ ] Expose parse API with options for alias resolution and metadata population
-- [ ] Expose proper types for external consumers
-- [ ] Add support for circular aliasing detection when not resolving aliases
+```ts
+const ALIAS_PATH_SEPARATOR = '.';
+```
 
+### `tokenTypeNames` (constant)
 
+```ts
+const tokenTypeNames = [
+  'color',
+  'dimension',
+  // ...
+] as const;
+```
 
+### `fontWeightValues` (constant)
 
+```ts
+const fontWeightValues = [
+  100,
+  'thin',
+  'hairline',
+  // ...
+] as const;
+```
+
+### `strokeStyleStringValues` (constant)
+
+```ts
+const strokeStyleStringValues = [
+  'solid',
+  'dashed',
+  // ...
+] as const;
+```
+
+### `strokeStyleLineCapValues` (constant)
+
+```ts
+const strokeStyleLineCapValues = [
+  'round',
+  'butt',
+  // ...
+] as const;
+```
