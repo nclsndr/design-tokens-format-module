@@ -1,15 +1,17 @@
+import { JSONValuePath } from './JSONDefinitions.js';
+
 export class ValidationError extends Error {
   type: 'Type' | 'Value';
-  path: Array<string | number>;
+  path: JSONValuePath;
 
   constructor({
     message,
     type,
-    path = [],
+    path,
   }: {
     type: 'Type' | 'Value';
     message: string;
-    path?: Array<string | number>;
+    path: JSONValuePath;
   }) {
     super(message);
     this.type = type;

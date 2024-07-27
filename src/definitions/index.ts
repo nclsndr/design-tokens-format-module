@@ -1,1 +1,1 @@
-export { parseToken } from './token.js';
+export { parseRawToken } from './token.js';

@@ -1,5 +1,7 @@
 import { Result } from '@swan-io/boxed';
 import { ValidationError } from '../utils/validationError.js';
+import { JSONValuePath } from '../utils/JSONDefinitions.js';
+import { AnalyzerContext } from './AnalyzerContext.js';
 
 export const numberTokenTypeName = 'number';
 export type NumberTokenType = typeof numberTokenTypeName;
@@ -32,16 +34,27 @@ export function matchIsTokenTypeName(value: unknown): value is TokenTypeName {
   );
 }
 
-export function parseTokenTypeName(
+export function parseTokenTypeName<AllowUndefined extends boolean = false>(
   value: unknown,
-  ctx: { varName: string },
-): Result<TokenTypeName, ValidationError[]> {
+  ctx: { allowUndefined: AllowUndefined } & AnalyzerContext,
+): Result<
+  AllowUndefined extends false ? TokenTypeName : TokenTypeName | undefined,
+  ValidationError[]
+> {
+  if (ctx.allowUndefined && value === undefined) {
+    return Result.Ok(
+      undefined as AllowUndefined extends false
+        ? TokenTypeName
+        : TokenTypeName | undefined,
+    );
+  }
   if (matchIsTokenTypeName(value)) {
     return Result.Ok(value);
   }
   return Result.Error([
     new ValidationError({
       type: 'Value',
+      path: ctx.path.array,
       message: `${ctx.varName} must be a value among: ${tokenTypeNames.map((v) => `"${v}"`).join(', ')}. Got "${value}".`,
     }),
   ]);

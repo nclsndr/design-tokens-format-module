@@ -1,18 +1,21 @@
 import { Result } from '@swan-io/boxed';
 
 import { ValidationError } from '../utils/validationError.js';
-import { AliasValueSignature } from './AliasValueSignature.js';
+import { AliasValueSignature } from './AliasSignature.js';
+import { AnalyzedValue } from './AnalyzedToken.js';
+import { captureAliasPath } from './captureAliasPath.js';
+import { JSONPath } from './JSONPath.js';
+import { AnalyzerContext } from './AnalyzerContext.js';
 
-export const ALIAS_SEPARATOR = '.';
-
-export function parseAliasValue(
+export function validateAliasValue(
   value: unknown,
-  ctx: { varName: string },
+  ctx: AnalyzerContext,
 ): Result<AliasValueSignature, ValidationError[]> {
   if (typeof value !== 'string') {
     return Result.Error([
       new ValidationError({
         type: 'Type',
+        path: ctx.path.array,
         message: `${ctx.varName} alias must be a string. Got "${typeof value}".`,
       }),
     ]);
@@ -21,6 +24,7 @@ export function parseAliasValue(
     return Result.Error([
       new ValidationError({
         type: 'Value',
+        path: ctx.path.array,
         message: `${ctx.varName} must be wrapped in curly braces to form an alias reference, like: "{my.alias}". Got "${value}".`,
       }),
     ]);
@@ -28,17 +32,26 @@ export function parseAliasValue(
   return Result.Ok(value as AliasValueSignature);
 }
 
-export function withAlias<R, E extends ValidationError[]>(
-  parser: (value: unknown, ctx: { varName: string }) => Result<R, E>,
+export function withAlias<R extends AnalyzedValue, E extends ValidationError[]>(
+  parser: (value: unknown, ctx: AnalyzerContext) => Result<R, E>,
 ): (
   value: unknown,
-  ctx: { varName: string },
-) => Result<R | AliasValueSignature, E | ValidationError[]> {
-  return (value: unknown, ctx: { varName: string }) =>
-    parser(value, ctx).flatMapError((errors) =>
-      parseAliasValue(value, ctx).mapError(
-        // take parser errors first, then alias errors - avoiding duplicates
-        (aliasErrors) => (errors.length > 0 ? errors : aliasErrors),
-      ),
-    );
+  ctx: AnalyzerContext,
+) => Result<R | AnalyzedValue<AliasValueSignature>, E | ValidationError[]> {
+  return (value: unknown, ctx: AnalyzerContext) =>
+    validateAliasValue(value, ctx)
+      .map((value) => ({
+        raw: value,
+        toReferences: captureAliasPath(value).match({
+          Some: (path) => [{ to: path }],
+          None: () => [],
+        }),
+      }))
+      .flatMapError((aliasErrors) =>
+        parser(value, ctx)
+          // .map()
+          .mapError((parserErrors) =>
+            parserErrors.length > 0 ? parserErrors : aliasErrors,
+          ),
+      );
 }

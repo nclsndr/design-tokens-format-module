@@ -2,7 +2,9 @@ import { withAlias } from '../alias.js';
 import { Result } from '@swan-io/boxed';
 import { ValidationError } from '../../utils/validationError.js';
 import { TokenSignature } from '../TokenSignature.js';
-import { WithAliasValueSignature } from '../AliasValueSignature.js';
+import { WithAliasValueSignature } from '../AliasSignature.js';
+import { AnalyzedValue } from '../AnalyzedToken.js';
+import { AnalyzerContext } from '../AnalyzerContext.js';
 
 export type ColorRawValue = `#${string}`;
 
@@ -16,12 +18,13 @@ export const hexadecimalColorValuePattern =
 
 export function parseColorStringRawValue(
   value: unknown,
-  ctx: { varName: string },
-): Result<ColorRawValue, ValidationError[]> {
+  ctx: AnalyzerContext,
+): Result<AnalyzedValue<ColorRawValue>, ValidationError[]> {
   if (typeof value !== 'string') {
     return Result.Error([
       new ValidationError({
         type: 'Type',
+        path: ctx.path.array,
         message: `${ctx.varName} must be a string. Got "${typeof value}".`,
       }),
     ]);
@@ -30,11 +33,15 @@ export function parseColorStringRawValue(
     return Result.Error([
       new ValidationError({
         type: 'Value',
+        path: ctx.path.array,
         message: `${ctx.varName} must start with "#" and have a length of 6 or 8. Got: "${value}".`,
       }),
     ]);
   }
-  return Result.Ok(value as ColorRawValue);
+  return Result.Ok({
+    raw: value as ColorRawValue,
+    toReferences: [],
+  });
 }
 
 export const parseAliasableColorStringValue = withAlias(

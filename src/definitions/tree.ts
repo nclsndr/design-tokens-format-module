@@ -17,25 +17,11 @@ export function parseTreeNode(
   return Result.Ok(value as JSONObject);
 }
 
-export function parseTreeNodeExtensions(
-  value: unknown,
-  ctx: { varName: string },
-): Result<JSONObject, ValidationError[]> {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
-    return Result.Error([
-      new ValidationError({
-        type: 'Type',
-        message: `${ctx.varName} must be an object. Got "${typeof value}".`,
-      }),
-    ]);
-  }
-  return Result.Ok(value as JSONObject);
-}
-
 export function parseTreeNodeDescription(
   value: unknown,
   ctx: { varName: string },
-): Result<string, ValidationError[]> {
+): Result<string | undefined, ValidationError[]> {
+  if (value === undefined) return Result.Ok(undefined);
   if (typeof value !== 'string') {
     return Result.Error([
       new ValidationError({
@@ -45,4 +31,20 @@ export function parseTreeNodeDescription(
     ]);
   }
   return Result.Ok(value);
+}
+
+export function parseTreeNodeExtensions(
+  value: unknown,
+  ctx: { varName: string },
+): Result<JSONObject | undefined, ValidationError[]> {
+  if (value === undefined) return Result.Ok(undefined);
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return Result.Error([
+      new ValidationError({
+        type: 'Type',
+        message: `${ctx.varName} must be an object. Got "${typeof value}".`,
+      }),
+    ]);
+  }
+  return Result.Ok(value as JSONObject);
 }

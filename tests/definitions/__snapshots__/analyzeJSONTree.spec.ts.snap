@@ -1,0 +1,127 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`analyzeTree > should parse a simple token tree with groups and tokens 1`] = `
+"{
+  "analyzedTokens": [
+    [
+      {
+        "path": {
+          "array": [
+            "someColors",
+            "blue"
+          ],
+          "string": "someColorsblue"
+        },
+        "resolvedType": "color",
+        "type": "color",
+        "value": {
+          "raw": "#0000ff",
+          "toReferences": []
+        }
+      },
+      {
+        "path": {
+          "array": [
+            "someNumbers",
+            "one"
+          ],
+          "string": "someNumbersone"
+        },
+        "resolvedType": "dimension",
+        "type": "dimension",
+        "value": {
+          "raw": "12px",
+          "toReferences": []
+        }
+      },
+      {
+        "path": {
+          "array": [
+            "someNumbers",
+            "two"
+          ],
+          "string": "someNumberstwo"
+        },
+        "resolvedType": "number",
+        "type": "number",
+        "value": {
+          "raw": 44,
+          "toReferences": []
+        }
+      },
+      {
+        "path": {
+          "array": [
+            "someNumbers",
+            "three"
+          ],
+          "string": "someNumbersthree"
+        },
+        "resolvedType": "number",
+        "type": "number",
+        "value": {
+          "raw": "{someNumbers.two}",
+          "toReferences": [
+            {
+              "to": [
+                "someNumbers",
+                "two"
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    [
+      {
+        "type": "Value",
+        "path": [
+          "someColors",
+          "red"
+        ],
+        "name": "ValidationError"
+      },
+      {
+        "type": "Value",
+        "path": [
+          "someColors",
+          "orange"
+        ],
+        "name": "ValidationError"
+      }
+    ]
+  ],
+  "analyzedGroups": [
+    [
+      {
+        "path": {
+          "array": [],
+          "string": ""
+        },
+        "childrenCount": 2
+      },
+      {
+        "path": {
+          "array": [
+            "someColors"
+          ],
+          "string": "someColors"
+        },
+        "tokenType": "color",
+        "childrenCount": 3
+      },
+      {
+        "path": {
+          "array": [
+            "someNumbers"
+          ],
+          "string": "someNumbers"
+        },
+        "tokenType": "number",
+        "childrenCount": 3
+      }
+    ],
+    []
+  ]
+}"
+`;

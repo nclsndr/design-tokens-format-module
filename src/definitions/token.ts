@@ -1,7 +1,7 @@
 import { Result } from '@swan-io/boxed';
 
 import { ValidationError } from '../utils/validationError.js';
-import { parseTokenTypeName } from './tokenTypeNames.js';
+import { parseTokenTypeName, TokenTypeName } from './tokenTypeNames.js';
 import {
   parseTreeNode,
   parseTreeNodeDescription,
@@ -11,14 +11,16 @@ import { parseAliasableStringValue } from './types/string.js';
 import { parseAliasableNumberValue } from './types/number.js';
 import { parseAliasableColorStringValue } from './types/color.js';
 import { parseAliasableDimensionValue } from './types/dimension.js';
-import { TokenSignature } from './TokenSignature.js';
+import { JSONObject } from '../utils/JSONDefinitions.js';
+import { AnalyzedToken, AnalyzedValue } from './AnalyzedToken.js';
+import { AnalyzerContext } from './AnalyzerContext.js';
 
 export function getTokenValueParser(
   type: string,
 ): (
   value: unknown,
-  ctx: { varName: string },
-) => Result<any, ValidationError[]> {
+  ctx: AnalyzerContext,
+) => Result<AnalyzedValue, Array<ValidationError>> {
   switch (type) {
     case 'number':
       return parseAliasableNumberValue;
@@ -29,10 +31,11 @@ export function getTokenValueParser(
     case 'dimension':
       return parseAliasableDimensionValue;
     default: {
-      return () =>
+      return (_, ctx) =>
         Result.Error([
           new ValidationError({
             type: 'Value',
+            path: ctx.path.array,
             message: `Unknown $type value: "${type}".`,
           }),
         ]);
@@ -40,20 +43,30 @@ export function getTokenValueParser(
   }
 }
 
-export function parseToken(
-  value: object,
-  ctx: { varName: string },
-): Result<TokenSignature, ValidationError[]> {
+export function parseRawToken(
+  value: JSONObject,
+  ctx: {
+    resolvedType: TokenTypeName;
+  } & AnalyzerContext,
+): Result<AnalyzedToken, Array<ValidationError>> {
   return parseTreeNode(value, ctx).flatMap((node) => {
-    const { $type, $value, $description, $extensions, ...rest } = node;
+    const {
+      $type, // only  for destructuring, ctx.resolvedType is used instead
+      $value,
+      $description,
+      $extensions,
+      ...rest
+    } = node;
 
-    const validationErrors: ValidationError[] = [];
+    // Accumulates validation errors
+    const validationErrors: Array<ValidationError> = [];
 
     // No extra properties allowed
     if (Object.keys(rest).length > 0) {
       validationErrors.push(
         new ValidationError({
           type: 'Value',
+          path: ctx.path.array,
           message: `${ctx.varName} has unexpected properties: ${Object.entries(
             rest,
           )
@@ -63,40 +76,38 @@ export function parseToken(
       );
     }
 
-    if ($description) {
-      parseTreeNodeDescription($description, {
-        varName: `${ctx.varName}.$description`,
-      }).tapError((e) => validationErrors.push(...e));
-    }
-
-    if ($extensions) {
-      parseTreeNodeExtensions($extensions, {
-        varName: `${ctx.varName}.$extensions`,
-      }).tapError((e) => validationErrors.push(...e));
-    }
-
-    // Type and related value
-    if (typeof $type === 'string') {
-      parseTokenTypeName($type, { varName: `${ctx.varName}.$type` })
+    return Result.all([
+      parseTokenTypeName(ctx.resolvedType, {
+        allowUndefined: false,
+        varName: `${ctx.varName}.$type`,
+        path: ctx.path,
+      })
+        .tapError((e) => validationErrors.push(...e))
         .flatMap((type) =>
           getTokenValueParser(type)($value, {
             varName: `${ctx.varName}.$value`,
-          }),
-        )
-        .tapError((e) => validationErrors.push(...e));
-    } else {
-      validationErrors.push(
-        new ValidationError({
-          type: 'Type',
-          message: `${ctx.varName} must have a $type property.`,
-        }),
-      );
-    }
-
-    if (validationErrors.length > 0) {
-      return Result.Error(validationErrors);
-    }
-
-    return Result.Ok(value as TokenSignature);
+            path: ctx.path,
+          })
+            .map((value) => ({ type, value }))
+            .tapError((e) => validationErrors.push(...e)),
+        ),
+      parseTreeNodeDescription($description, {
+        varName: `${ctx.varName}.$description`,
+      }).tapError((e) => validationErrors.push(...e)),
+      parseTreeNodeExtensions($extensions, {
+        varName: `${ctx.varName}.$extensions`,
+      }).tapError((e) => validationErrors.push(...e)),
+    ])
+      .flatMap(([{ type, value }, description, extensions]) => {
+        return Result.Ok({
+          path: ctx.path,
+          resolvedType: ctx.resolvedType,
+          type,
+          value,
+          description,
+          extensions,
+        });
+      })
+      .flatMapError(() => Result.Error(validationErrors));
   });
 }

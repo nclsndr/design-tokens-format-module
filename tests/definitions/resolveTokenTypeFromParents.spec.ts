@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import {
-  analyzeTree,
-  resolveTokenTypeFromParents,
-} from '../../src/parser/analyzeTree';
+
+import { resolveTokenTypeFromParent } from '../../src/parser/resolveTokenTypeFromParent';
 
 describe.concurrent('resolveTokenTypeFromParents', () => {
   it('should resolve a type at a given path', () => {
@@ -15,7 +13,7 @@ describe.concurrent('resolveTokenTypeFromParents', () => {
       },
     };
 
-    const result = resolveTokenTypeFromParents(tree, ['aGroup', 'blue']);
+    const result = resolveTokenTypeFromParent(tree, ['aGroup', 'blue']);
 
     expect(result.isOk()).toBe(true);
     expect(result.isOk() && result.get()).toBe('color');
@@ -32,7 +30,7 @@ describe.concurrent('resolveTokenTypeFromParents', () => {
       },
     };
 
-    const result = resolveTokenTypeFromParents(tree, [
+    const result = resolveTokenTypeFromParent(tree, [
       'aGroup',
       'aSubGroup',
       'blue',
@@ -51,7 +49,7 @@ describe.concurrent('resolveTokenTypeFromParents', () => {
       $type: 'color',
     };
 
-    const result = resolveTokenTypeFromParents(tree, ['aGroup', 'blue']);
+    const result = resolveTokenTypeFromParent(tree, ['aGroup', 'blue']);
 
     expect(result.isOk()).toBe(true);
     expect(result.isOk() && result.get()).toBe('color');
@@ -65,44 +63,12 @@ describe.concurrent('resolveTokenTypeFromParents', () => {
       },
     };
 
-    const result = resolveTokenTypeFromParents(tree, ['aGroup', 'blue']);
+    const result = resolveTokenTypeFromParent(tree, ['aGroup', 'blue']);
 
     expect(result.isError()).toBe(true);
     expect(result.isError() && result.getError()).toHaveLength(1);
     expect(result.isError() && result.getError()[0].message).toBe(
       'Could not resolve $type up to root for token at path: "aGroup.blue".',
     );
-  });
-});
-
-describe.concurrent('analyzeTree', () => {
-  it('should parse a simple token tree with groups and tokens', () => {
-    const tree = {
-      someColors: {
-        $type: 'color',
-        red: {
-          $type: 'color',
-          $value: '#ff0000',
-        },
-        blue: {
-          $value: '#0000ff',
-        },
-      },
-      someNumbers: {
-        $type: 'number',
-        one: {
-          $type: 'dimension',
-          $value: '12px',
-        },
-        two: {
-          $value: 44,
-        },
-      },
-    };
-
-    const result = analyzeTree(tree);
-
-    // TODO @Nico: NO CONSOLE
-    console.log('result:', result);
   });
 });

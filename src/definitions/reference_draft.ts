@@ -11,6 +11,22 @@ export type Reference = {
   };
 };
 
+export function createReference(
+  from: {
+    treePath: JSONPath;
+    valuePath: JSONPath;
+  },
+  to: {
+    treePath: JSONPath;
+  },
+): Reference {
+  return {
+    state: 'unresolved',
+    from,
+    to,
+  };
+}
+
 // export class Reference {
 //   #from: {
 //     treePath: JSONPath;

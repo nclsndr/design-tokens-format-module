@@ -6,9 +6,15 @@ import type { JSONValuePath } from '../utils/JSONDefinitions.js';
 export class JSONPath {
   #array: JSONValuePath;
   #string: string;
+  #isRoot = false;
   constructor(path: JSONValuePath) {
     this.#array = path;
     this.#string = path.join('');
+    this.#isRoot = path.length === 0;
+  }
+
+  static fromJSONValuePath(path: JSONValuePath) {
+    return new JSONPath(path);
   }
 
   get array() {
@@ -17,12 +23,16 @@ export class JSONPath {
   get string() {
     return this.#string;
   }
+  get isRoot() {
+    return this.#isRoot;
+  }
   get parent(): JSONValuePath {
     return this.#array.slice(0, -1);
   }
   set value(path: JSONValuePath) {
     this.#array = path;
     this.#string = path.join('');
+    this.#isRoot = path.length === 0;
   }
 
   toString() {
