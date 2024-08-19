@@ -40,36 +40,28 @@ export namespace FontFamily {
 const fontWeightTypeName = 'fontWeight';
 type FontWeightTypeName = typeof fontWeightTypeName;
 export const fontWeightValues = [
-  100,
   'thin',
   'hairline',
-  200,
   'extra-light',
   'ultra-light',
-  300,
   'light',
-  400,
   'normal',
   'regular',
   'book',
-  500,
   'medium',
-  600,
   'semi-bold',
   'demi-bold',
-  700,
   'bold',
-  800,
   'extra-bold',
   'ultra-bold',
-  900,
   'black',
   'heavy',
-  950,
   'extra-black',
   'ultra-black',
 ] as const;
-type FontWeightValue = WithAliasValue<(typeof fontWeightValues)[number]>;
+type FontWeightValue = WithAliasValue<
+  (typeof fontWeightValues)[number] | number
+>;
 type FontWeightToken = TokenSignature<FontWeightTypeName, FontWeightValue>;
 export namespace FontWeight {
   export type TypeName = FontWeightTypeName;
