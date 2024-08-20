@@ -1,6 +1,12 @@
 # Design Tokens Format Module
 
-*— A Typescript implementation of the [Design Tokens Format Module](https://design-tokens.github.io/community-group/format/) specification along with some utility functions*
+*— A TypeScript implementation of the [Design Tokens Format Module](https://tr.designtokens.org/format/) specification along with some utility functions*
+
+## Abstract
+
+This packages aims to provide the most agnostic JavaScript/TypeScript definitions from the [Design Tokens Format Module](https://tr.designtokens.org/format/) specification, for library developers and tooling creators.
+
+Join the conversation on the [W3C Design Tokens Community Group](https://design-tokens.github.io/community-group/format/) repository.
 
 > ⚠️ Please note, the DTCG specification is NOT stable yet, breaking changes might occur in the future.
 
@@ -139,6 +145,12 @@ Some token types have a fixed set of values. These are available as constants.
 ```typescript
 import { fontWeightValues, strokeStyleStringValues, strokeStyleLineCapValues } from 'design-tokens-format-module';
 ```
+
+## Previous versions
+
+The packages goal has shifted from being a generic parser — which requires way more feedback — to a reliable source of truth for the DTCG implementations in the JavaScript land.
+
+> The features and APIs available before version 0.9.0 has been relocated to a [new location](https://github.com/nclsndr/design-tokens-tools/tree/main/packages/w3c-design-tokens-parser) where they get revamped and improved.
 
 ## Contributing
 

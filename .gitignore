@@ -1,4 +1,4 @@
-node_modules
+.DS_Store
 
 .idea
 .vscode
@@ -6,5 +6,7 @@ node_modules
 .env.*
 .npmrc
 
+node_modules
 dist
 coverage
+
