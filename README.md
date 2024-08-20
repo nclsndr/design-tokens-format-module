@@ -9,19 +9,19 @@
 ### Using npm
 
 ```bash
-$ npm install design-tokens-format-module
+npm install design-tokens-format-module
 ```
 
 ### Using yarn
 
 ```bash
-$ yarn add design-tokens-format-module
+yarn add design-tokens-format-module
 ```
 
 ### Using pnpm
 
 ```bash
-$ pnpm add design-tokens-format-module
+pnpm add design-tokens-format-module
 ```
 
 ## Usage
@@ -107,12 +107,69 @@ function validateToken(token: unknown) {
 }
 ```
 
+### Alias utils
+
+Alias values can be validated and parsed.
+
+```ts
+import { captureAliasPath } from 'design-tokens-format-module';
+
+const result = captureAliasPath('{path.to.token}');
+
+if(result.status === 'ok') {
+  result.value // string[]
+} else {
+  switch (result.error.tag) {
+    case 'TYPE_ERROR': {
+      result.error.message // Expected a string value. Got [x].
+      break;
+    }
+    case 'FORMAT_ERROR': {
+      result.error.message // Expected an alias value. Got [x].
+      break;
+    }
+  }
+}
+```
+
 ### Enum-like constants
 
 Some token types have a fixed set of values. These are available as constants.
 
 ```typescript
 import { fontWeightValues, strokeStyleStringValues, strokeStyleLineCapValues } from 'design-tokens-format-module';
+```
+
+## Contributing
+
+If you find any typos, errors, or additional improvements, feel free to contribute to the project.
+
+### Development
+
+Install dependencies.
+
+```bash
+npm install
+```
+
+Run test in watch mode.
+
+```bash
+npm run test
+```
+
+Please add tests to cover the new functionality or bug fix you are working upon.
+
+### Before opening a PR
+
+We expect the tests and the build to pass for a PR to be reviewed and merged.
+
+```bash
+npm run test --run
+```
+
+```bash
+npm run build
 ```
 
 ## API
@@ -168,6 +225,64 @@ type TokenTypeName =
   | 'dimension'
   // | ... 
 ```
+
+
+### `captureAliasPath` (function)
+
+```ts
+const CAPTURE_ALIAS_PATH_ERRORS = {
+  TYPE_ERROR: 'Expected a string value.',
+  // ...
+} as const;
+
+type ValidationError = {
+  [k in keyof Writable<typeof CAPTURE_ALIAS_PATH_ERRORS>]?: {
+    message: string;
+  };
+};
+
+type Result<T, E> =
+  | {
+  status: 'ok';
+  value: T;
+  error?: undefined;
+}
+  | {
+  status: 'error';
+  error: E;
+  value?: undefined;
+};
+
+declare function captureAliasPath(
+  value: unknown,
+): Result<Array<string>, ValidationError>;
+declare function captureAliasPath<AsString extends boolean | undefined>(
+  value: unknown,
+  asString: AsString,
+): Result<AsString extends true ? string : Array<string>, ValidationError>;
+```
+
+Usage
+
+```ts
+const result = captureAliasPath('{path.to.token}');
+
+if(result.status === 'ok') {
+  result.value // string[]
+} else {
+  switch (result.error.tag) {
+    case 'TYPE_ERROR': {
+      result.error.message // Expected a string value. Got [x].
+      break;
+    }
+    case 'FORMAT_ERROR': {
+      result.error.message // Expected an alias value. Got [x].
+      break;
+    }
+  }
+}
+```
+
 
 ### `matchIsAliasValue` (function)
 

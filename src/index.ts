@@ -1,6 +1,12 @@
-export { type AliasValue, ALIAS_PATH_SEPARATOR } from './definitions/Alias.js';
+export {
+  type AliasValue,
+  type WithAliasValue,
+  ALIAS_PATH_SEPARATOR,
+} from './definitions/Alias.js';
+export { type GroupProperties } from './definitions/GroupProperties.js';
 export { type JSON } from './definitions/JSONSignatures.js';
 export { type JSONTokenTree } from './definitions/JSONTokenTree.js';
+export { type TokenSignature } from './definitions/TokenSignature.js';
 export {
   type Color,
   type Dimension,
@@ -26,6 +32,14 @@ export {
   strokeStyleLineCapValues,
 } from './definitions/tokenTypes.js';
 
+export {
+  captureAliasPath,
+  CAPTURE_ALIAS_PATH_ERRORS,
+} from './utils/captureAliasPath.js';
+export {
+  extractAliasPathAsString,
+  extractAliasPathAsArray,
+} from './utils/extractAliasPath.js';
 export { matchIsAliasValue } from './utils/matchIsAliasValue.js';
 export { matchIsGroup } from './utils/matchIsGroup.js';
 export { matchIsToken } from './utils/matchIsToken.js';
