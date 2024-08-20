@@ -6,7 +6,7 @@
 
 This packages aims to provide the most agnostic JavaScript/TypeScript definitions from the [Design Tokens Format Module](https://tr.designtokens.org/format/) specification, for library developers and tooling creators.
 
-Join the conversation on the [W3C Design Tokens Community Group](https://design-tokens.github.io/community-group/format/) repository.
+Join the conversation on the [W3C Design Tokens Community Group](https://github.com/design-tokens/community-group) repository.
 
 > ⚠️ Please note, the DTCG specification is NOT stable yet, breaking changes might occur in the future.
 
