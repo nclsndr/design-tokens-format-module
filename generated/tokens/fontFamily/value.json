@@ -1,0 +1,32 @@
+{
+  "$id": "https://designtokens.org/schemas/tokens/fontFamily/value",
+  "title": "FontFamily value",
+  "description": "The font family of a property.",
+  "anyOf": [
+    {
+      "$ref": "https://designtokens.org/schemas/alias/value"
+    },
+    {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    }
+  ],
+  "$defs": [
+    {
+      "$id": "https://designtokens.org/schemas/alias/value",
+      "title": "Alias value",
+      "description": "A path to a value in the design token tree. Example: \"{colors.primary}\".",
+      "type": "string",
+      "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$"
+    }
+  ]
+}

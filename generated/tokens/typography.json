@@ -1,0 +1,171 @@
+{
+  "$id": "https://designtokens.org/schemas/tokens/typography",
+  "title": "Typography token",
+  "description": "The typography token.",
+  "type": "object",
+  "properties": {
+    "$type": {
+      "type": "string",
+      "pattern": "^typography$"
+    },
+    "$value": {
+      "$ref": "https://designtokens.org/schemas/tokens/typography/value"
+    },
+    "$description": {
+      "$ref": "https://designtokens.org/schemas/treeNode/description"
+    },
+    "$extensions": {
+      "$ref": "https://designtokens.org/schemas/treeNode/extensions"
+    }
+  },
+  "required": [
+    "$value"
+  ],
+  "additionalProperties": false,
+  "$defs": [
+    {
+      "$id": "https://designtokens.org/schemas/alias/value",
+      "title": "Alias value",
+      "description": "A path to a value in the design token tree. Example: \"{colors.primary}\".",
+      "type": "string",
+      "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$"
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/fontFamily/value",
+      "title": "FontFamily value",
+      "description": "The font family of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/dimension/value",
+      "title": "Dimension value",
+      "description": "The dimension of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "type": "string",
+          "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:px|rem)$"
+        }
+      ]
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/fontWeight/value",
+      "title": "FontWeight value",
+      "description": "The font weight of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": [
+                "thin",
+                "hairline",
+                "extra-light",
+                "ultra-light",
+                "light",
+                "normal",
+                "regular",
+                "book",
+                "medium",
+                "semi-bold",
+                "demi-bold",
+                "bold",
+                "extra-bold",
+                "ultra-bold",
+                "black",
+                "heavy",
+                "extra-black",
+                "ultra-black"
+              ]
+            },
+            {
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/number/value",
+      "title": "Number value",
+      "description": "The number of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/typography/value",
+      "title": "Typography value",
+      "description": "The typography of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "fontFamily": {
+              "$ref": "https://designtokens.org/schemas/tokens/fontFamily/value"
+            },
+            "fontSize": {
+              "$ref": "https://designtokens.org/schemas/tokens/dimension/value"
+            },
+            "fontWeight": {
+              "$ref": "https://designtokens.org/schemas/tokens/fontWeight/value"
+            },
+            "letterSpacing": {
+              "$ref": "https://designtokens.org/schemas/tokens/dimension/value"
+            },
+            "lineHeight": {
+              "$ref": "https://designtokens.org/schemas/tokens/number/value"
+            }
+          },
+          "required": [
+            "fontFamily",
+            "fontSize",
+            "fontWeight",
+            "letterSpacing",
+            "lineHeight"
+          ]
+        }
+      ]
+    },
+    {
+      "$id": "https://designtokens.org/schemas/treeNode/description",
+      "title": "Description",
+      "type": "string"
+    },
+    {
+      "$id": "https://designtokens.org/schemas/treeNode/extensions",
+      "title": "Extensions",
+      "type": "object"
+    }
+  ]
+}

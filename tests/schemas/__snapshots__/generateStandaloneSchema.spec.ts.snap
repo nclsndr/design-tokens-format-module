@@ -1,0 +1,1182 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateStandaloneSchema > Should generate standalone schemas for token types 1`] = `
+[
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/color/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^#[0-9a-fA-F]{6,8}$",
+            "type": "string",
+          },
+        ],
+        "description": "The hexadecimal representation of a color.",
+        "title": "Color value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/color",
+    "additionalProperties": false,
+    "description": "The color token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^color$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/color/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "Color token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/dimension/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:px|rem)$",
+            "type": "string",
+          },
+        ],
+        "description": "The dimension of a property.",
+        "title": "Dimension value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/dimension",
+    "additionalProperties": false,
+    "description": "The dimension token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^dimension$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/dimension/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "Dimension token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/fontFamily/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "oneOf": [
+              {
+                "type": "string",
+              },
+              {
+                "items": {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+            ],
+          },
+        ],
+        "description": "The font family of a property.",
+        "title": "FontFamily value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/fontFamily",
+    "additionalProperties": false,
+    "description": "The font family token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^fontFamily$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/fontFamily/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "FontFamily token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/fontWeight/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "oneOf": [
+              {
+                "enum": [
+                  "thin",
+                  "hairline",
+                  "extra-light",
+                  "ultra-light",
+                  "light",
+                  "normal",
+                  "regular",
+                  "book",
+                  "medium",
+                  "semi-bold",
+                  "demi-bold",
+                  "bold",
+                  "extra-bold",
+                  "ultra-bold",
+                  "black",
+                  "heavy",
+                  "extra-black",
+                  "ultra-black",
+                ],
+                "type": "string",
+              },
+              {
+                "type": "number",
+              },
+            ],
+          },
+        ],
+        "description": "The font weight of a property.",
+        "title": "FontWeight value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/fontWeight",
+    "additionalProperties": false,
+    "description": "The font weight token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^fontWeight$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/fontWeight/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "FontWeight token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/duration/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:ms|s)$",
+            "type": "string",
+          },
+        ],
+        "description": "The duration of a property.",
+        "title": "Duration value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/duration",
+    "additionalProperties": false,
+    "description": "The duration token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^duration$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/duration/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "Duration token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/cubicBezier/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "items": {
+              "type": "number",
+            },
+            "maxItems": 4,
+            "minItems": 4,
+            "type": "array",
+          },
+        ],
+        "description": "The cubic bezier of a property.",
+        "title": "CubicBezier value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/cubicBezier",
+    "additionalProperties": false,
+    "description": "The cubic bezier token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^cubicBezier$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/cubicBezier/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "CubicBezier token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/number/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "type": "number",
+          },
+        ],
+        "description": "The number of a property.",
+        "title": "Number value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/number",
+    "additionalProperties": false,
+    "description": "The number token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^number$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/number/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "Number token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/dimension/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:px|rem)$",
+            "type": "string",
+          },
+        ],
+        "description": "The dimension of a property.",
+        "title": "Dimension value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/strokeStyle/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "oneOf": [
+              {
+                "enum": [
+                  "solid",
+                  "dashed",
+                  "dotted",
+                  "double",
+                  "groove",
+                  "ridge",
+                  "outset",
+                  "inset",
+                ],
+                "type": "string",
+              },
+              {
+                "properties": {
+                  "dashArray": {
+                    "items": {
+                      "$ref": "https://designtokens.org/schemas/tokens/dimension/value",
+                    },
+                    "type": "array",
+                  },
+                  "lineCap": {
+                    "enum": [
+                      "round",
+                      "butt",
+                      "square",
+                    ],
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "dashArray",
+                  "lineCap",
+                ],
+                "type": "object",
+              },
+            ],
+          },
+        ],
+        "description": "The stroke style of a property.",
+        "title": "StrokeStyle value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/strokeStyle",
+    "additionalProperties": false,
+    "description": "The stroke style token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^strokeStyle$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/strokeStyle/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "StrokeStyle token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/color/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^#[0-9a-fA-F]{6,8}$",
+            "type": "string",
+          },
+        ],
+        "description": "The hexadecimal representation of a color.",
+        "title": "Color value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/dimension/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:px|rem)$",
+            "type": "string",
+          },
+        ],
+        "description": "The dimension of a property.",
+        "title": "Dimension value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/strokeStyle/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "oneOf": [
+              {
+                "enum": [
+                  "solid",
+                  "dashed",
+                  "dotted",
+                  "double",
+                  "groove",
+                  "ridge",
+                  "outset",
+                  "inset",
+                ],
+                "type": "string",
+              },
+              {
+                "properties": {
+                  "dashArray": {
+                    "items": {
+                      "$ref": "https://designtokens.org/schemas/tokens/dimension/value",
+                    },
+                    "type": "array",
+                  },
+                  "lineCap": {
+                    "enum": [
+                      "round",
+                      "butt",
+                      "square",
+                    ],
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "dashArray",
+                  "lineCap",
+                ],
+                "type": "object",
+              },
+            ],
+          },
+        ],
+        "description": "The stroke style of a property.",
+        "title": "StrokeStyle value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/border/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "properties": {
+              "color": {
+                "$ref": "https://designtokens.org/schemas/tokens/color/value",
+              },
+              "style": {
+                "$ref": "https://designtokens.org/schemas/tokens/strokeStyle/value",
+              },
+              "width": {
+                "$ref": "https://designtokens.org/schemas/tokens/dimension/value",
+              },
+            },
+            "required": [
+              "color",
+              "width",
+              "style",
+            ],
+            "type": "object",
+          },
+        ],
+        "description": "The border of a property.",
+        "title": "Border value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/border",
+    "additionalProperties": false,
+    "description": "The border token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^border$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/border/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "Border token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/duration/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:ms|s)$",
+            "type": "string",
+          },
+        ],
+        "description": "The duration of a property.",
+        "title": "Duration value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/cubicBezier/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "items": {
+              "type": "number",
+            },
+            "maxItems": 4,
+            "minItems": 4,
+            "type": "array",
+          },
+        ],
+        "description": "The cubic bezier of a property.",
+        "title": "CubicBezier value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/transition/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "properties": {
+              "delay": {
+                "$ref": "https://designtokens.org/schemas/tokens/duration/value",
+              },
+              "duration": {
+                "$ref": "https://designtokens.org/schemas/tokens/duration/value",
+              },
+              "timingFunction": {
+                "$ref": "https://designtokens.org/schemas/tokens/cubicBezier/value",
+              },
+            },
+            "required": [
+              "duration",
+              "delay",
+              "timingFunction",
+            ],
+            "type": "object",
+          },
+        ],
+        "description": "The transition of a property.",
+        "title": "Transition value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/transition",
+    "additionalProperties": false,
+    "description": "The transition token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^transition$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/transition/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "Transition token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/color/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^#[0-9a-fA-F]{6,8}$",
+            "type": "string",
+          },
+        ],
+        "description": "The hexadecimal representation of a color.",
+        "title": "Color value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/dimension/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:px|rem)$",
+            "type": "string",
+          },
+        ],
+        "description": "The dimension of a property.",
+        "title": "Dimension value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/shadow/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "properties": {
+              "blur": {
+                "$ref": "https://designtokens.org/schemas/tokens/dimension/value",
+              },
+              "color": {
+                "$ref": "https://designtokens.org/schemas/tokens/color/value",
+              },
+              "offsetX": {
+                "$ref": "https://designtokens.org/schemas/tokens/dimension/value",
+              },
+              "offsetY": {
+                "$ref": "https://designtokens.org/schemas/tokens/dimension/value",
+              },
+              "spread": {
+                "$ref": "https://designtokens.org/schemas/tokens/dimension/value",
+              },
+            },
+            "required": [
+              "color",
+              "offsetX",
+              "offsetY",
+              "blur",
+              "spread",
+            ],
+            "type": "object",
+          },
+        ],
+        "description": "The shadow of a property.",
+        "title": "Shadow value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/shadow",
+    "additionalProperties": false,
+    "description": "The shadow token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^shadow$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/shadow/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "Shadow token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/color/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^#[0-9a-fA-F]{6,8}$",
+            "type": "string",
+          },
+        ],
+        "description": "The hexadecimal representation of a color.",
+        "title": "Color value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/gradient/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "items": {
+              "properties": {
+                "color": {
+                  "$ref": "https://designtokens.org/schemas/tokens/color/value",
+                },
+                "position": {
+                  "maximum": 1,
+                  "minimum": 0,
+                  "type": "number",
+                },
+              },
+              "required": [
+                "color",
+                "position",
+              ],
+              "type": "object",
+            },
+            "type": "array",
+          },
+        ],
+        "description": "The gradient of a property.",
+        "title": "Gradient value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/gradient",
+    "additionalProperties": false,
+    "description": "The gradient token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^gradient$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/gradient/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "Gradient token",
+    "type": "object",
+  },
+  {
+    "$defs": [
+      {
+        "$id": "https://designtokens.org/schemas/alias/value",
+        "description": "A path to a value in the design token tree. Example: "{colors.primary}".",
+        "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$",
+        "title": "Alias value",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/fontFamily/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "oneOf": [
+              {
+                "type": "string",
+              },
+              {
+                "items": {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+            ],
+          },
+        ],
+        "description": "The font family of a property.",
+        "title": "FontFamily value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/dimension/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:px|rem)$",
+            "type": "string",
+          },
+        ],
+        "description": "The dimension of a property.",
+        "title": "Dimension value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/fontWeight/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "oneOf": [
+              {
+                "enum": [
+                  "thin",
+                  "hairline",
+                  "extra-light",
+                  "ultra-light",
+                  "light",
+                  "normal",
+                  "regular",
+                  "book",
+                  "medium",
+                  "semi-bold",
+                  "demi-bold",
+                  "bold",
+                  "extra-bold",
+                  "ultra-bold",
+                  "black",
+                  "heavy",
+                  "extra-black",
+                  "ultra-black",
+                ],
+                "type": "string",
+              },
+              {
+                "type": "number",
+              },
+            ],
+          },
+        ],
+        "description": "The font weight of a property.",
+        "title": "FontWeight value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/number/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "type": "number",
+          },
+        ],
+        "description": "The number of a property.",
+        "title": "Number value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/tokens/typography/value",
+        "anyOf": [
+          {
+            "$ref": "https://designtokens.org/schemas/alias/value",
+          },
+          {
+            "properties": {
+              "fontFamily": {
+                "$ref": "https://designtokens.org/schemas/tokens/fontFamily/value",
+              },
+              "fontSize": {
+                "$ref": "https://designtokens.org/schemas/tokens/dimension/value",
+              },
+              "fontWeight": {
+                "$ref": "https://designtokens.org/schemas/tokens/fontWeight/value",
+              },
+              "letterSpacing": {
+                "$ref": "https://designtokens.org/schemas/tokens/dimension/value",
+              },
+              "lineHeight": {
+                "$ref": "https://designtokens.org/schemas/tokens/number/value",
+              },
+            },
+            "required": [
+              "fontFamily",
+              "fontSize",
+              "fontWeight",
+              "letterSpacing",
+              "lineHeight",
+            ],
+            "type": "object",
+          },
+        ],
+        "description": "The typography of a property.",
+        "title": "Typography value",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/description",
+        "title": "Description",
+        "type": "string",
+      },
+      {
+        "$id": "https://designtokens.org/schemas/treeNode/extensions",
+        "title": "Extensions",
+        "type": "object",
+      },
+    ],
+    "$id": "https://designtokens.org/schemas/tokens/typography",
+    "additionalProperties": false,
+    "description": "The typography token.",
+    "properties": {
+      "$description": {
+        "$ref": "https://designtokens.org/schemas/treeNode/description",
+      },
+      "$extensions": {
+        "$ref": "https://designtokens.org/schemas/treeNode/extensions",
+      },
+      "$type": {
+        "pattern": "^typography$",
+        "type": "string",
+      },
+      "$value": {
+        "$ref": "https://designtokens.org/schemas/tokens/typography/value",
+      },
+    },
+    "required": [
+      "$value",
+    ],
+    "title": "Typography token",
+    "type": "object",
+  },
+]
+`;

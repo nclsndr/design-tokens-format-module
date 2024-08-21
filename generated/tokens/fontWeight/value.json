@@ -1,0 +1,49 @@
+{
+  "$id": "https://designtokens.org/schemas/tokens/fontWeight/value",
+  "title": "FontWeight value",
+  "description": "The font weight of a property.",
+  "anyOf": [
+    {
+      "$ref": "https://designtokens.org/schemas/alias/value"
+    },
+    {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "thin",
+            "hairline",
+            "extra-light",
+            "ultra-light",
+            "light",
+            "normal",
+            "regular",
+            "book",
+            "medium",
+            "semi-bold",
+            "demi-bold",
+            "bold",
+            "extra-bold",
+            "ultra-bold",
+            "black",
+            "heavy",
+            "extra-black",
+            "ultra-black"
+          ]
+        },
+        {
+          "type": "number"
+        }
+      ]
+    }
+  ],
+  "$defs": [
+    {
+      "$id": "https://designtokens.org/schemas/alias/value",
+      "title": "Alias value",
+      "description": "A path to a value in the design token tree. Example: \"{colors.primary}\".",
+      "type": "string",
+      "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$"
+    }
+  ]
+}
