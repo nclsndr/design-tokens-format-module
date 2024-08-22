@@ -88,6 +88,7 @@ type CubicBezierToken = TokenSignature<CubicBezierTypeName, CubicBezierValue>;
 export namespace CubicBezier {
   export type TypeName = CubicBezierTypeName;
   export type Value = CubicBezierValue;
+  export type Token = CubicBezierToken;
 }
 
 // 8.7 Number
