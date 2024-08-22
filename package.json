@@ -13,7 +13,7 @@
   "author": "Nico Andre<hello@nclsndr.com>",
   "type": "module",
   "scripts": {
-    "test": "vitest",
+    "test": "tsc -p tests/tsconfig.json || true && vitest",
     "build": "rm -rf dist && tsc --build",
     "tsc": "tsc"
   },
