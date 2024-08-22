@@ -14,7 +14,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "build": "tsc --build",
+    "build": "rm -rf dist && tsc --build",
     "tsc": "tsc"
   },
   "main": "./dist/index.js",

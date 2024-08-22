@@ -24,8 +24,9 @@ export {
   // Aggregated types
   type DesignToken,
   type TokenTypeName,
-  // Types list
+  // Types constants
   tokenTypeNames,
+  tokenTypeNamesMapping,
   // Enum-like values
   fontWeightValues,
   strokeStyleStringValues,

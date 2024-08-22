@@ -233,6 +233,13 @@ export const tokenTypeNames = [
   typographyTypeName,
 ] as const;
 
+export const tokenTypeNamesMapping = tokenTypeNames.reduce<{
+  [T in TokenTypeName]: T;
+}>((acc: any, t) => {
+  acc[t] = t;
+  return acc;
+}, {} as any);
+
 export type TokenTypeName =
   | ColorTypeName
   | DimensionTypeName
