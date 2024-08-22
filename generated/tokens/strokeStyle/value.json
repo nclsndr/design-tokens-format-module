@@ -1,0 +1,73 @@
+{
+  "$id": "https://designtokens.org/schemas/tokens/strokeStyle/value",
+  "title": "StrokeStyle value",
+  "description": "The stroke style of a property.",
+  "anyOf": [
+    {
+      "$ref": "https://designtokens.org/schemas/alias/value"
+    },
+    {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "solid",
+            "dashed",
+            "dotted",
+            "double",
+            "groove",
+            "ridge",
+            "outset",
+            "inset"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "dashArray": {
+              "type": "array",
+              "items": {
+                "$ref": "https://designtokens.org/schemas/tokens/dimension/value"
+              }
+            },
+            "lineCap": {
+              "type": "string",
+              "enum": [
+                "round",
+                "butt",
+                "square"
+              ]
+            }
+          },
+          "required": [
+            "dashArray",
+            "lineCap"
+          ]
+        }
+      ]
+    }
+  ],
+  "$defs": [
+    {
+      "$id": "https://designtokens.org/schemas/alias/value",
+      "title": "Alias value",
+      "description": "A path to a value in the design token tree. Example: \"{colors.primary}\".",
+      "type": "string",
+      "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$"
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/dimension/value",
+      "title": "Dimension value",
+      "description": "The dimension of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "type": "string",
+          "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:px|rem)$"
+        }
+      ]
+    }
+  ]
+}

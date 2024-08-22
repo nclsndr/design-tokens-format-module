@@ -1,0 +1,151 @@
+{
+  "$id": "https://designtokens.org/schemas/tokens/border",
+  "title": "Border token",
+  "description": "The border token.",
+  "type": "object",
+  "properties": {
+    "$type": {
+      "type": "string",
+      "pattern": "^border$"
+    },
+    "$value": {
+      "$ref": "https://designtokens.org/schemas/tokens/border/value"
+    },
+    "$description": {
+      "$ref": "https://designtokens.org/schemas/treeNode/description"
+    },
+    "$extensions": {
+      "$ref": "https://designtokens.org/schemas/treeNode/extensions"
+    }
+  },
+  "required": [
+    "$value"
+  ],
+  "additionalProperties": false,
+  "$defs": [
+    {
+      "$id": "https://designtokens.org/schemas/alias/value",
+      "title": "Alias value",
+      "description": "A path to a value in the design token tree. Example: \"{colors.primary}\".",
+      "type": "string",
+      "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$"
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/color/value",
+      "title": "Color value",
+      "description": "The hexadecimal representation of a color.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6,8}$"
+        }
+      ]
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/dimension/value",
+      "title": "Dimension value",
+      "description": "The dimension of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "type": "string",
+          "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:px|rem)$"
+        }
+      ]
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/strokeStyle/value",
+      "title": "StrokeStyle value",
+      "description": "The stroke style of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": [
+                "solid",
+                "dashed",
+                "dotted",
+                "double",
+                "groove",
+                "ridge",
+                "outset",
+                "inset"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "dashArray": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "https://designtokens.org/schemas/tokens/dimension/value"
+                  }
+                },
+                "lineCap": {
+                  "type": "string",
+                  "enum": [
+                    "round",
+                    "butt",
+                    "square"
+                  ]
+                }
+              },
+              "required": [
+                "dashArray",
+                "lineCap"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/border/value",
+      "title": "Border value",
+      "description": "The border of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "color": {
+              "$ref": "https://designtokens.org/schemas/tokens/color/value"
+            },
+            "width": {
+              "$ref": "https://designtokens.org/schemas/tokens/dimension/value"
+            },
+            "style": {
+              "$ref": "https://designtokens.org/schemas/tokens/strokeStyle/value"
+            }
+          },
+          "required": [
+            "color",
+            "width",
+            "style"
+          ]
+        }
+      ]
+    },
+    {
+      "$id": "https://designtokens.org/schemas/treeNode/description",
+      "title": "Description",
+      "type": "string"
+    },
+    {
+      "$id": "https://designtokens.org/schemas/treeNode/extensions",
+      "title": "Extensions",
+      "type": "object"
+    }
+  ]
+}

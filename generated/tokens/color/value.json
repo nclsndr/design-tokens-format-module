@@ -1,0 +1,23 @@
+{
+  "$id": "https://designtokens.org/schemas/tokens/color/value",
+  "title": "Color value",
+  "description": "The hexadecimal representation of a color.",
+  "anyOf": [
+    {
+      "$ref": "https://designtokens.org/schemas/alias/value"
+    },
+    {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6,8}$"
+    }
+  ],
+  "$defs": [
+    {
+      "$id": "https://designtokens.org/schemas/alias/value",
+      "title": "Alias value",
+      "description": "A path to a value in the design token tree. Example: \"{colors.primary}\".",
+      "type": "string",
+      "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$"
+    }
+  ]
+}

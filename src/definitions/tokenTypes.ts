@@ -4,7 +4,7 @@ import type { TokenSignature } from './TokenSignature.js';
 // Type declaration following the https://tr.designtokens.org/format specification
 
 // 8.1 Color
-const colorTypeName = 'color';
+export const colorTypeName = 'color';
 type ColorTypeName = typeof colorTypeName;
 type ColorValue = WithAliasValue<`#${string}`>;
 type ColorToken = TokenSignature<ColorTypeName, ColorValue>;
@@ -15,7 +15,7 @@ export namespace Color {
 }
 
 // 8.2 Dimension
-const dimensionTypeName = 'dimension';
+export const dimensionTypeName = 'dimension';
 type DimensionTypeName = typeof dimensionTypeName;
 type DimensionValue = WithAliasValue<`${number}px` | `${number}rem`>;
 type DimensionToken = TokenSignature<DimensionTypeName, DimensionValue>;
@@ -26,7 +26,7 @@ export namespace Dimension {
 }
 
 // 8.3 Font Family
-const fontFamilyTypeName = 'fontFamily';
+export const fontFamilyTypeName = 'fontFamily';
 type FontFamilyTypeName = typeof fontFamilyTypeName;
 type FontFamilyValue = WithAliasValue<string | Array<string>>;
 type FontFamilyToken = TokenSignature<FontFamilyTypeName, FontFamilyValue>;
@@ -37,7 +37,7 @@ export namespace FontFamily {
 }
 
 // 8.4 Font Weight
-const fontWeightTypeName = 'fontWeight';
+export const fontWeightTypeName = 'fontWeight';
 type FontWeightTypeName = typeof fontWeightTypeName;
 export const fontWeightValues = [
   'thin',
@@ -70,7 +70,7 @@ export namespace FontWeight {
 }
 
 // 8.5 Duration
-const durationTypeName = 'duration';
+export const durationTypeName = 'duration';
 type DurationTypeName = typeof durationTypeName;
 type DurationValue = WithAliasValue<`${number}ms` | `${number}s`>;
 type DurationToken = TokenSignature<DurationTypeName, DurationValue>;
@@ -81,7 +81,7 @@ export namespace Duration {
 }
 
 // 8.6 Cubic Bezier
-const cubicBezierTypeName = 'cubicBezier';
+export const cubicBezierTypeName = 'cubicBezier';
 type CubicBezierTypeName = typeof cubicBezierTypeName;
 type CubicBezierValue = WithAliasValue<[number, number, number, number]>;
 type CubicBezierToken = TokenSignature<CubicBezierTypeName, CubicBezierValue>;
@@ -92,7 +92,7 @@ export namespace CubicBezier {
 }
 
 // 8.7 Number
-const numberTypeName = 'number';
+export const numberTypeName = 'number';
 type NumberTypeName = typeof numberTypeName;
 type NumberValue = WithAliasValue<number>;
 type NumberToken = TokenSignature<NumberTypeName, NumberValue>;
@@ -107,7 +107,7 @@ export namespace Number {
    https://tr.designtokens.org/format/#composite-types
 */
 // 9.2 Stroke Style
-const strokeStyleTypeName = 'strokeStyle';
+export const strokeStyleTypeName = 'strokeStyle';
 type StrokeStyleTypeName = typeof strokeStyleTypeName;
 export const strokeStyleStringValues = [
   'solid',
@@ -135,7 +135,7 @@ export namespace StrokeStyle {
 }
 
 // 9.3 Border
-const borderTypeName = 'border';
+export const borderTypeName = 'border';
 type BorderTypeName = typeof borderTypeName;
 type BorderValue = WithAliasValue<{
   color: ColorValue;
@@ -150,7 +150,7 @@ export namespace Border {
 }
 
 // 9.4 Transition
-const transitionTypeName = 'transition';
+export const transitionTypeName = 'transition';
 type TransitionTypeName = typeof transitionTypeName;
 type TransitionValue = WithAliasValue<{
   duration: DurationValue;
@@ -165,7 +165,7 @@ export namespace Transition {
 }
 
 // 9.5 Shadow
-const shadowTypeName = 'shadow';
+export const shadowTypeName = 'shadow';
 type ShadowTypeName = typeof shadowTypeName;
 type ShadowValue = WithAliasValue<{
   color: ColorValue;
@@ -182,7 +182,7 @@ export namespace Shadow {
 }
 
 // 9.6 Gradient
-const gradientTypeName = 'gradient';
+export const gradientTypeName = 'gradient';
 type GradientTypeName = typeof gradientTypeName;
 type GradientValue = WithAliasValue<
   Array<{
@@ -198,7 +198,7 @@ export namespace Gradient {
 }
 
 // 9.7 Typography
-const typographyTypeName = 'typography';
+export const typographyTypeName = 'typography';
 type TypographyTypeName = typeof typographyTypeName;
 type TypographyValue = WithAliasValue<{
   fontFamily: FontFamilyValue;

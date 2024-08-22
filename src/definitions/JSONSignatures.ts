@@ -11,3 +11,5 @@ export namespace JSON {
   export type Array = JSONArray;
   export type Primitive = string | number | boolean | null;
 }
+
+export type JSONValuePath = (string | number)[];

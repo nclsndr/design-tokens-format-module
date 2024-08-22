@@ -1,0 +1,70 @@
+{
+  "$id": "https://designtokens.org/schemas/tokens/transition/value",
+  "title": "Transition value",
+  "description": "The transition of a property.",
+  "anyOf": [
+    {
+      "$ref": "https://designtokens.org/schemas/alias/value"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "duration": {
+          "$ref": "https://designtokens.org/schemas/tokens/duration/value"
+        },
+        "delay": {
+          "$ref": "https://designtokens.org/schemas/tokens/duration/value"
+        },
+        "timingFunction": {
+          "$ref": "https://designtokens.org/schemas/tokens/cubicBezier/value"
+        }
+      },
+      "required": [
+        "duration",
+        "delay",
+        "timingFunction"
+      ]
+    }
+  ],
+  "$defs": [
+    {
+      "$id": "https://designtokens.org/schemas/alias/value",
+      "title": "Alias value",
+      "description": "A path to a value in the design token tree. Example: \"{colors.primary}\".",
+      "type": "string",
+      "pattern": "^\\{[a-zA-Z0-9_\\-\\.]+\\}$"
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/duration/value",
+      "title": "Duration value",
+      "description": "The duration of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "type": "string",
+          "pattern": "^(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:ms|s)$"
+        }
+      ]
+    },
+    {
+      "$id": "https://designtokens.org/schemas/tokens/cubicBezier/value",
+      "title": "CubicBezier value",
+      "description": "The cubic bezier of a property.",
+      "anyOf": [
+        {
+          "$ref": "https://designtokens.org/schemas/alias/value"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        }
+      ]
+    }
+  ]
+}
