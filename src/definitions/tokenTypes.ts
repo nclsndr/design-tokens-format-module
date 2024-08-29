@@ -162,7 +162,7 @@ export namespace Gradient {
   export type TypeName = typeof gradientTypeName;
   export type RawValue = Array<{
     color: Color.Value;
-    position: number;
+    position: Number.Value;
   }>;
   export type Value = WithAliasValue<Gradient.RawValue>;
   export type Token = TokenSignature<Gradient.TypeName, Gradient.Value>;
@@ -238,3 +238,8 @@ export type DesignToken =
   | Shadow.Token
   | Gradient.Token
   | Typography.Token;
+
+export type PickTokenByType<T extends TokenTypeName> = Extract<
+  DesignToken,
+  { $type: T }
+>;

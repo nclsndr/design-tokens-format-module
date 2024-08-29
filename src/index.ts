@@ -24,6 +24,8 @@ export {
   // Aggregated types
   type DesignToken,
   type TokenTypeName,
+  // Utils
+  type PickTokenByType,
   // Types constants
   tokenTypeNames,
   tokenTypeNamesMapping,
