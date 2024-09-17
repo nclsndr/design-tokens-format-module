@@ -145,13 +145,23 @@ export namespace Transition {
 const shadowTypeName = 'shadow';
 export namespace Shadow {
   export type TypeName = typeof shadowTypeName;
-  export type RawValue = {
-    color: Color.Value;
-    offsetX: Dimension.Value;
-    offsetY: Dimension.Value;
-    blur: Dimension.Value;
-    spread: Dimension.Value;
-  };
+  export type RawValue =
+    | Array<{
+        color: Color.Value;
+        offsetX: Dimension.Value;
+        offsetY: Dimension.Value;
+        blur: Dimension.Value;
+        spread: Dimension.Value;
+        inset?: boolean;
+      }>
+    | {
+        color: Color.Value;
+        offsetX: Dimension.Value;
+        offsetY: Dimension.Value;
+        blur: Dimension.Value;
+        spread: Dimension.Value;
+        inset?: boolean;
+      };
   export type Value = WithAliasValue<Shadow.RawValue>;
   export type Token = TokenSignature<Shadow.TypeName, Shadow.Value>;
 }

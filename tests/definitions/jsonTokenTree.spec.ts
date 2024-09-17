@@ -41,4 +41,22 @@ describe('JSONTokenTree', () => {
 
     expect(tree).toBeDefined();
   });
+  it('should accept a description and extensions at the root level', () => {
+    const tree: JSONTokenTree = {
+      $description: 'A description of the token tree',
+      $extensions: {
+        'com.example': true,
+      },
+    };
+
+    expect(tree).toBeDefined();
+  });
+  it('should accept a token at the root level', () => {
+    const tree: JSONTokenTree = {
+      $type: 'color',
+      $value: '#ff0000',
+    };
+
+    expect(tree).toBeDefined();
+  });
 });
