@@ -1,5 +1,6 @@
 import type { WithAliasValue } from './Alias.js';
 import type { TokenSignature } from './TokenSignature.js';
+import { JSONValue } from './JSONSignatures.js';
 
 // Type declaration following the https://tr.designtokens.org/format specification
 
@@ -249,7 +250,18 @@ export type DesignToken =
   | Gradient.Token
   | Typography.Token;
 
-export type PickTokenByType<T extends TokenTypeName> = Extract<
-  DesignToken,
-  { $type: T }
->;
+export type PickTokenByType<T extends TokenTypeName> = {
+  color: Color.Token;
+  dimension: Dimension.Token;
+  fontFamily: FontFamily.Token;
+  fontWeight: FontWeight.Token;
+  duration: Duration.Token;
+  cubicBezier: CubicBezier.Token;
+  number: Number.Token;
+  strokeStyle: StrokeStyle.Token;
+  border: Border.Token;
+  transition: Transition.Token;
+  shadow: Shadow.Token;
+  gradient: Gradient.Token;
+  typography: Typography.Token;
+}[T];
