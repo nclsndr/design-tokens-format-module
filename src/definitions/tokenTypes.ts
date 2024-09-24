@@ -64,7 +64,7 @@ export namespace FontWeight {
 const durationTypeName = 'duration';
 export namespace Duration {
   export type TypeName = typeof durationTypeName;
-  export type RawValue = `${number}ms` | `${number}s`;
+  export type RawValue = `${number}ms`;
   export type Value = WithAliasValue<Duration.RawValue>;
   export type Token = TokenSignature<Duration.TypeName, Duration.Value>;
 }
