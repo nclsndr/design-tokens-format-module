@@ -7,14 +7,14 @@
     "design system",
     "dtcg"
   ],
-  "version": "0.9.9",
+  "version": "0.9.10",
   "homepage": "https://github.com/nclsndr/design-tokens-format-module",
   "license": "MIT",
   "author": "Nico Andre<hello@nclsndr.com>",
   "type": "module",
   "scripts": {
-    "test": "tsc -p tests/tsconfig.json || true && vitest",
-    "build": "rm -rf dist && tsc --build",
+    "test": "tsc --project tests/tsconfig.json || true && vitest",
+    "build": "rm -rf dist && tsc --project tsconfig.json",
     "tsc": "tsc"
   },
   "main": "./dist/index.js",
