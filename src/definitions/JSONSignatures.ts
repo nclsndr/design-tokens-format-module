@@ -7,7 +7,7 @@ export type JSONValue = JSONPrimitiveValue | JSONArray | JSONObject;
 
 export type JSONValuePath = Array<string | number>;
 
-export namespace JSON {
+export namespace Json {
   export type Value = JSONValue;
   export type Object = JSONObject;
   export type Array = JSONArray;

@@ -192,10 +192,10 @@ npm run build
 type AliasValue = `{${string}}`;
 ```
 
-### `JSON` (namespace)
+### `Json` (namespace)
 
 ```ts
-namespace JSON {
+namespace Json {
   export type Value = JSONValue;
   export type Object = JSONObject;
   export type Array = JSONArray;

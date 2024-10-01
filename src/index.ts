@@ -4,7 +4,7 @@ export {
   ALIAS_PATH_SEPARATOR,
 } from './definitions/Alias.js';
 export { type GroupProperties } from './definitions/GroupProperties.js';
-export { type JSON } from './definitions/JSONSignatures.js';
+export { type Json } from './definitions/JSONSignatures.js';
 export { type JSONTokenTree } from './definitions/JSONTokenTree.js';
 export { type TokenSignature } from './definitions/TokenSignature.js';
 export {
