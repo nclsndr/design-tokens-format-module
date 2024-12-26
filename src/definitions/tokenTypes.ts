@@ -1,6 +1,5 @@
 import type { WithAliasValue } from './Alias.js';
 import type { TokenSignature } from './TokenSignature.js';
-import { JSONValue } from './JSONSignatures.js';
 
 // Type declaration following the https://tr.designtokens.org/format specification
 
@@ -17,7 +16,7 @@ export namespace Color {
 const dimensionTypeName = 'dimension';
 export namespace Dimension {
   export type TypeName = typeof dimensionTypeName;
-  export type RawValue = `${number}px` | `${number}rem`;
+  export type RawValue = { value: number; unit: 'px' | 'rem' };
   export type Value = WithAliasValue<Dimension.RawValue>;
   export type Token = TokenSignature<Dimension.TypeName, Dimension.Value>;
 }
@@ -64,7 +63,7 @@ export namespace FontWeight {
 const durationTypeName = 'duration';
 export namespace Duration {
   export type TypeName = typeof durationTypeName;
-  export type RawValue = `${number}ms`;
+  export type RawValue = { value: number; unit: 'ms' | 's' };
   export type Value = WithAliasValue<Duration.RawValue>;
   export type Token = TokenSignature<Duration.TypeName, Duration.Value>;
 }
