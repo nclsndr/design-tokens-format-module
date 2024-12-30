@@ -51,7 +51,10 @@ const tokenTree = {
   spacing: {
     small: {
       $type: 'dimension',
-      $value: '8px',
+      $value: {
+        value: 8,
+        unit: 'px',
+      },
     },
   },
 } satisfies JSONTokenTree;
