@@ -45,7 +45,11 @@ const tokenTree = {
   color: {
     primary: {
       $type: 'color',
-      $value: '#000000',
+      $value: {
+        colorSpace: 'srgb',
+        components: [1, 0, 1],
+        alpha: 1,
+      },
     },
   },
   spacing: {
