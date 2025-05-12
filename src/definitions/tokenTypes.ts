@@ -8,16 +8,18 @@ const colorTypeName = 'color';
 export const colorSpaceValues = [
   'srgb',
   'srgb-linear',
-  'display-p3',
-  'a98-rgb',
-  'rec2020',
-  'prophoto-rgb',
   'hsl',
   'hwb',
   'lab',
   'lch',
   'oklab',
-  'oklch'
+  'oklch',
+  'display-p3',
+  'a98-rgb',
+  'prophoto-rgb',
+  'rec2020',
+  'xyz-d65',
+  'xyz-d50',
 ] as const;
 export namespace Color {
   export type TypeName = typeof colorTypeName;
