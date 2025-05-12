@@ -30,6 +30,7 @@ export {
   tokenTypeNames,
   tokenTypeNamesMapping,
   // Enum-like values
+  colorSpaceValues,
   fontWeightValues,
   strokeStyleStringValues,
   strokeStyleLineCapValues,
