@@ -3,11 +3,31 @@ import type { TokenSignature } from './TokenSignature.js';
 
 // Type declaration following the https://tr.designtokens.org/format specification
 
-// 8.1 Color
+// 8.1 Color, following the https://tr.designtokens.org/color specification
 const colorTypeName = 'color';
+export const colorSpaceValues = [
+  'srgb',
+  'srgb-linear',
+  'display-p3',
+  'a98-rgb',
+  'rec2020',
+  'prophoto-rgb',
+  'hsl',
+  'hwb',
+  'lab',
+  'lch',
+  'oklab',
+  'oklch'
+] as const;
 export namespace Color {
   export type TypeName = typeof colorTypeName;
-  export type RawValue = `#${string}`;
+
+  export type RawValue = {
+    colorSpace: typeof colorSpaceValues[number];
+    components: [number | 'none', number | 'none', number | 'none'];
+    alpha?: number;
+    hex?: `#${string}`;
+  };
   export type Value = WithAliasValue<Color.RawValue>;
   export type Token = TokenSignature<Color.TypeName, Color.Value>;
 }
