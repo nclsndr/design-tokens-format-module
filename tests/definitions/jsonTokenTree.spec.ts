@@ -18,7 +18,10 @@ describe('JSONTokenTree', () => {
       },
       red: {
         $type: 'color',
-        $value: '#ff0000',
+        $value: {
+          colorSpace: 'srgb',
+          components: [0, 0, 0],
+        },
       },
     };
 
@@ -54,7 +57,12 @@ describe('JSONTokenTree', () => {
   it('should accept a token at the root level', () => {
     const tree: JSONTokenTree = {
       $type: 'color',
-      $value: '#ff0000',
+      $value: {
+        colorSpace: 'srgb',
+        components: [0, 0, 0],
+        alpha: 1,
+        hex: '#000000',
+      },
     };
 
     expect(tree).toBeDefined();
