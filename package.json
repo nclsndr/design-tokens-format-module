@@ -15,6 +15,7 @@
   "scripts": {
     "test": "tsc --project tests/tsconfig.json || true && vitest",
     "build": "rm -rf dist && tsc --project tsconfig.json",
+    "format": "prettier --write .",
     "tsc": "tsc"
   },
   "main": "./dist/index.js",
