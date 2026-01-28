@@ -108,6 +108,15 @@ export namespace Number {
   export type Token = TokenSignature<Number.TypeName, Number.Value>;
 }
 
+// 8.8 String
+const stringTypeName = 'string';
+export namespace String {
+  export type TypeName = typeof stringTypeName;
+  export type RawValue = string;
+  export type Value = WithAliasValue<String.RawValue>;
+  export type Token = TokenSignature<String.TypeName, String.Value>;
+}
+
 /*
    9. Composite Types
    https://tr.designtokens.org/format/#composite-types
@@ -226,6 +235,7 @@ export const tokenTypeNames = [
   durationTypeName,
   cubicBezierTypeName,
   numberTypeName,
+  stringTypeName,
   strokeStyleTypeName,
   borderTypeName,
   transitionTypeName,
@@ -249,6 +259,7 @@ export type TokenTypeName =
   | Duration.TypeName
   | CubicBezier.TypeName
   | Number.TypeName
+  | String.TypeName
   | StrokeStyle.TypeName
   | Border.TypeName
   | Transition.TypeName
@@ -264,6 +275,7 @@ export type DesignToken =
   | Duration.Token
   | CubicBezier.Token
   | Number.Token
+  | String.Token
   | StrokeStyle.Token
   | Border.Token
   | Transition.Token
@@ -279,6 +291,7 @@ export type PickTokenByType<T extends TokenTypeName> = {
   duration: Duration.Token;
   cubicBezier: CubicBezier.Token;
   number: Number.Token;
+  string: String.Token;
   strokeStyle: StrokeStyle.Token;
   border: Border.Token;
   transition: Transition.Token;

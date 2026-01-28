@@ -6,7 +6,11 @@ export {
 export { type GroupProperties } from './definitions/GroupProperties.js';
 export { type Json } from './definitions/JSONSignatures.js';
 export { type JSONTokenTree } from './definitions/JSONTokenTree.js';
-export { type TokenSignature } from './definitions/TokenSignature.js';
+export {
+  type DeprecatedValue,
+  type JSONPointer,
+  type TokenSignature,
+} from './definitions/TokenSignature.js';
 export {
   type Color,
   type Dimension,
@@ -15,6 +19,7 @@ export {
   type Duration,
   type CubicBezier,
   type Number,
+  type String,
   type StrokeStyle,
   type Border,
   type Transition,

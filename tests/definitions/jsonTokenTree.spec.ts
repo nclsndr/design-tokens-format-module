@@ -8,7 +8,11 @@ describe('JSONTokenTree', () => {
       colors: {
         $type: 'color',
         blue: {
-          $value: '#0000ff',
+          $value: {
+            colorSpace: 'srgb',
+            components: [0, 0, 1],
+            hex: '#0000ff',
+          },
         },
         lighten: {
           blue: {
@@ -27,18 +31,31 @@ describe('JSONTokenTree', () => {
 
     expect(tree).toBeDefined();
   });
-  it('should accept any of the token values when $type is not provided at the token level', () => {
+  it('should accept 2025.10 group properties ($deprecated, $extends, $ref) and $root', () => {
     const tree: JSONTokenTree = {
       colors: {
         $type: 'color',
-        blue: {
-          $value: 'an invalid value',
+        $deprecated: 'Legacy group',
+        $extends: '{baseColors}',
+        $ref: '#/some/other/group',
+        $root: {
+          $value: {
+            colorSpace: 'srgb',
+            components: [1, 0, 0],
+          },
         },
       },
-      // @ts-expect-error
-      red: {
-        $type: 'color',
-        $value: 'an invalid value',
+    };
+
+    expect(tree).toBeDefined();
+  });
+  it('should accept any token value when no $type is provided on the token or its parent group', () => {
+    const tree: JSONTokenTree = {
+      misc: {
+        any: { $value: 'any string' },
+        // Since this token is untyped, it can match any token signature value union
+        // (e.g. `fontFamily` allows strings).
+        another: { $value: 123 },
       },
     };
 
@@ -62,6 +79,17 @@ describe('JSONTokenTree', () => {
         components: [0, 0, 0],
         alpha: 1,
         hex: '#000000',
+      },
+    };
+
+    expect(tree).toBeDefined();
+  });
+  it('should accept $root tokens at the group level', () => {
+    const tree: JSONTokenTree = {
+      spacing: {
+        $type: 'dimension',
+        $root: { $value: { value: 16, unit: 'px' } },
+        small: { $value: { value: 8, unit: 'px' } },
       },
     };
 
